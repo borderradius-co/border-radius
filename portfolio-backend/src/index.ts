@@ -15,8 +15,6 @@ import { Project } from "./entities/Project";
 import { User } from "./entities/User";
 import path from "path";
 
-//rerun
-
 const main = async () => {
 
     const conn = await createConnection({
