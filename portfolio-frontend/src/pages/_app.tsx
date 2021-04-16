@@ -1,11 +1,10 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react';
 import theme from '../theme';
-
+import "@fontsource/roboto";
 
 
 function MyApp({ Component, pageProps }) {
   return (
-
    <ChakraProvider resetCSS theme={theme}>
       <ColorModeProvider
         options={{
@@ -15,8 +14,6 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </ColorModeProvider>
     </ChakraProvider>
-   
- 
   )
 }
 

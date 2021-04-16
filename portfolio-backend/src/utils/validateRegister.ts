@@ -29,6 +29,10 @@ export const validateRegister = (options: UsernamePasswordInput) => {
             }]
         
     }
+
+
+    //password should contain Lowercase, Uppercase, Number, Minimum Length of 8, 
+
     return null
     
 }
