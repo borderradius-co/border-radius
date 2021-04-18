@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne} from "typeorm"
+import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne, OneToMany} from "typeorm"
 import { Field, ObjectType } from "type-graphql";
 import { User } from "./User";
+import { Updoot } from "./Updoot";
 
 @ObjectType()
 @Entity()
@@ -10,12 +11,17 @@ export class Project extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+
   @Field()
   @Column()
   creatorId: number;
 
+  @Field()
   @ManyToOne(() => User, user => user.projects)
-  creater: User;
+  creator: User;
+
+  @OneToMany(() => Updoot, (updoot) => updoot.project)
+  updoots: Updoot[];
 
 
   @Field()
@@ -28,7 +34,7 @@ export class Project extends BaseEntity {
 
   @Field()
   @Column({type:"int", default: 0})
-  votes!: number;
+  points!: number;
 
   @Field(() => String)
   @CreateDateColumn()

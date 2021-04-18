@@ -22,26 +22,26 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             body =
             <>
             <NextLink href="/login">
-                <Link marginRight={2} color="white">Login</Link>
+                <Link marginRight={2} >Login</Link>
             </NextLink>
 
             <NextLink href="/register">
-                <Link color="white">Register</Link>
+                <Link fontWeight="bold">Register</Link>
             </NextLink>
             </>
         //user is logged in
         } else  {
             body = 
             <Flex>
-                <Box marginRight={2} color="white">
+                <Box marginRight={2} >
                     {data.me.username}
                 </Box> 
-                <Button onClick={() => {logout()}} variant="link" isLoading={logoutFetching} >logout</Button>
+                <Button onClick={() => {logout()}} variant="link" isLoading={logoutFetching} color="black" fontWeight="medium" >logout</Button>
             </Flex>
 
         }
         return (
-            <Flex zIndex={1} position="sticky" top={0} bg="teal" padding={4} >
+            <Flex zIndex={1} position="sticky" top={0} bg="divar" padding={4} >
                 <Box marginLeft="auto">{body}</Box> 
             </Flex>
         );

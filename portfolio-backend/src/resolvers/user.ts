@@ -1,6 +1,6 @@
 // import { User } from "src/entities/User"
 import { MyContext } from "src/types";
-import {Arg, Ctx, Field, Mutation, ObjectType, Query, Resolver} from "type-graphql";
+import {Arg, Ctx, Field, FieldResolver, Mutation, ObjectType, Query, Resolver, Root} from "type-graphql";
 import argon2 from "argon2";
 import {User} from "../entities/User";
 import { UsernamePasswordInput } from "./UsernamePasswordInput";
@@ -23,6 +23,7 @@ class FieldError {
 
 @ObjectType() 
 class UserResponse {
+    
     @Field(() => [FieldError], {nullable: true})
     errors?: FieldError[]
 
@@ -30,8 +31,22 @@ class UserResponse {
     user?: User
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+    @FieldResolver(()=> String)
+    email(@Root() user:User, @Ctx() {req}: MyContext) {
+
+        //this is the current user and they can see their own email
+        if (req.session.userId === user.id) {
+            return user.email
+        }
+
+        //current user wants to see someone else's email 
+        return ""
+    }
+
+
+
     @Mutation(() => UserResponse)
     async changePassword(
         @Arg('token') token: string, 
