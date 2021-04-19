@@ -1,9 +1,11 @@
 import { dedupExchange, fetchExchange , Exchange, stringifyVariables} from "urql"
-import { LogoutMutation, MeQuery, MeDocument, LoginMutation, RegisterMutation } from "../generated/graphql"
+import { LogoutMutation, MeQuery, MeDocument, LoginMutation, RegisterMutation, VoteMutationVariables, DeleteProjectMutationVariables } from "../generated/graphql"
 import { betterUpdateQuery } from "./betterUpdateQuery"
 import { cacheExchange, Resolver, Cache } from "@urql/exchange-graphcache";
 import {pipe, tap} from "wonka";
 import Router from "next/router";
+import gql from "graphql-tag"
+import { isServer } from "./isServer";
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
@@ -53,13 +55,21 @@ const cursorPagination = (): Resolver => {
 };
 
 
-export const createUrqlClient = (ssrExchange: any) => ({
+export const createUrqlClient = (ssrExchange: any, ctx: any) => {
+  let cookie = "";
+  if (isServer()) {
+    cookie = ctx?.req?.headers?.cookie;
+    console.log("cookie: ", cookie)
+  }
+  return {
+
     url: "http://localhost:4000/graphql",
     fetchOptions: {
     credentials: 'include' as const,
+    headers: cookie ? {
+      cookie,
+    } : undefined
   },
-  
-
   exchanges: [
     dedupExchange, 
     cacheExchange({
@@ -73,6 +83,54 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          deleteProject: (_result, args, cache, info) => {
+            cache.invalidate({
+              __typename: "Project",
+              id: (args as DeleteProjectMutationVariables).id,
+            });
+          },
+          vote: (_result, args, cache, info)=> {
+            const {projectId, value} = args as VoteMutationVariables;
+            const data = cache.readFragment(
+              gql `
+                fragment __ on Project {
+                  id
+                  points
+                  voteStatus
+                }
+              `,
+              {id: projectId} as any
+            );
+            console.log('data: ', data)
+            if (data) {
+                if (data.voteStatus === value) {
+                  return
+                }
+                const newPoints = (data.points as number) + (!data.voteStatus ? 1 : 2) * value ;
+                cache.writeFragment(
+                  gql`
+                    fragment _ on Project {
+                      points
+                      voteStatus
+                    }
+                  `,
+                  { id: projectId, points: newPoints, voteStatus: value } as any
+                );
+            }
+          },
+          createProject: (_result, args, cache, info) => {
+            // console.log("start")
+            // console.log(cache.inspectFields('Query'))
+            const allFields = cache.inspectFields('Query');
+            const fieldInfos = allFields.filter(
+              (info) => info.fieldName === "projects"
+              );
+            fieldInfos.forEach((field)=> {
+              cache.invalidate('Query', 'projects', field.arguments || { })
+            })
+          
+            // console.log(cache.inspectFields('Query'))
+          },
           logout: (_result, args, cache, info) => {
             betterUpdateQuery<LogoutMutation, MeQuery>(cache, {query: MeDocument}, _result, () => ({me:null}))
 
@@ -111,8 +169,8 @@ export const createUrqlClient = (ssrExchange: any) => ({
   errorExchange,
   ssrExchange,
   fetchExchange
-]
-
-});
+  ],
+};
+};
 
 

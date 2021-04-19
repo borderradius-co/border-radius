@@ -1,0 +1,16 @@
+fragment ProjectSnippet on Project {
+  id
+  name
+  text
+  textSnippet
+  createdAt
+  updatedAt
+  creatorId
+  points
+  voteStatus
+  creator {
+    id
+    username
+    createdAt
+  }
+}

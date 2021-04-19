@@ -5,7 +5,7 @@ mutation CreateProject($input: ProjectInput!) {
     text
     createdAt
     updatedAt
-    votes
+    points
     creatorId
   }
 }

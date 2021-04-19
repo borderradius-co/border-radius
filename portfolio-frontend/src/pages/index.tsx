@@ -4,14 +4,19 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import {useProjectsQuery}  from "../generated/graphql"
 import { Layout } from "../components/Layout";
 import NextLink from "next/link";
-import {Box, Button, Flex, Heading, Link, Stack, Text} from "@chakra-ui/react"
+import {Box, Button, Flex, Heading, Link, Stack, Text, Icon, IconButton } from "@chakra-ui/react"
 import React, { useState } from "react";
+import { DeleteIcon } from '@chakra-ui/icons'
+import { UpdootSection } from "../components/UpdootSection";
+import {useDeleteProjectMutation} from "../generated/graphql"
+
 
 const Index = () => {
     const [variables, setVariables] = useState({limit: 10, cursor: null as null | string});
     const [{fetching, data}] = useProjectsQuery({
         variables,
     });
+    const [, deleteProject] = useDeleteProjectMutation()
 
     if (!fetching && !data) {
         return <div>There are nothing to display! Error!</div>
@@ -32,11 +37,27 @@ const Index = () => {
             <div>loading...</div>
             ) : (
             <Stack spacing={8}>
-                {data!.projects.projects.map((project) => (
-                    <Box key={project.id} p={5}  borderWidth="1px" >
-                        <Heading fontSize="xl">{project.name}</Heading>
-                        <Text mt={4}>{project.text}</Text>
-                    </Box>
+                {data!.projects.projects.map((project) => 
+                !project ? null : (
+                    <Flex key={project.id} p={5}  borderWidth="1px" alignItems="center">
+                        <UpdootSection project={project} ></UpdootSection> 
+                        <Box>
+                            <NextLink href="/project/id" as={`/project/${project.id}`} >
+                                <Link>
+                                    <Heading fontSize="xl">{project.name}</Heading>   
+                                </Link>  
+                            </NextLink>
+                                         
+                            <Text mt={4}>{project.text}</Text>
+                            <Text>Created by {project.creator.username}</Text> 
+                            <IconButton 
+                            onClick={()=> {
+                                deleteProject({id: project.id})
+                                }}
+                            aria-label="Delete project" 
+                            icon={<DeleteIcon/>} />
+                        </Box>          
+                    </Flex>
 
                 ))}
             </Stack>
