@@ -46,8 +46,9 @@ export type MutationCreateProjectArgs = {
 
 
 export type MutationUpdateProjectArgs = {
-  name?: Maybe<Scalars['String']>;
-  id: Scalars['Float'];
+  text: Scalars['String'];
+  name: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 
@@ -254,6 +255,21 @@ export type RegisterMutation = (
   ) }
 );
 
+export type UpdateProjectMutationVariables = Exact<{
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  text: Scalars['String'];
+}>;
+
+
+export type UpdateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { updateProject?: Maybe<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'name' | 'id' | 'updatedAt' | 'textSnippet'>
+  )> }
+);
+
 export type VoteMutationVariables = Exact<{
   value: Scalars['Int'];
   projectId: Scalars['Int'];
@@ -428,6 +444,20 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const UpdateProjectDocument = gql`
+    mutation UpdateProject($id: Int!, $name: String!, $text: String!) {
+  updateProject(id: $id, name: $name, text: $text) {
+    name
+    id
+    updatedAt
+    textSnippet
+  }
+}
+    `;
+
+export function useUpdateProjectMutation() {
+  return Urql.useMutation<UpdateProjectMutation, UpdateProjectMutationVariables>(UpdateProjectDocument);
 };
 export const VoteDocument = gql`
     mutation Vote($value: Int!, $projectId: Int!) {

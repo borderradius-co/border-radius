@@ -4,6 +4,7 @@ import { MyContext } from "../types"
 import { isAuth } from "../middleware/isAuth"
 import { getConnection } from "typeorm";
 import { Updoot } from "../entities/Updoot";
+import { User } from "../entities/User";
 
 @InputType()
 class ProjectInput {
@@ -28,6 +29,27 @@ export class ProjectResolver {
     @FieldResolver(() => String)
     textSnippet(@Root() root: Project) {
         return root.text.slice(0, 50)
+    }
+
+    @FieldResolver(() => User)
+    creator(@Root() project: Project,
+    @Ctx() {userLoader}:MyContext
+    ) {
+    return userLoader.load(project.creatorId)
+    }
+
+    @FieldResolver(() => Int, {nullable: true})
+    async voteStatus(@Root() project: Project,
+    @Ctx() {updootLoader, req}:MyContext) {
+      if (!req.session.userId) {
+        return null
+      }
+      const updoot = await updootLoader.load({
+        projectId: project.id,
+        userId: req.session.userId
+      })
+
+      return updoot ? updoot.value : null
     }
 
     @Mutation(() => Boolean )
@@ -101,33 +123,14 @@ export class ProjectResolver {
 
         const replacements: any[] = [realLimitPlusOne];
 
-        if (req.session.userId) {
-            replacements.push(req.session.userId)
-        }
-        let cursorIndex = 3
-
         if (cursor) {
             replacements.push(new Date(parseInt(cursor)))
-            cursorIndex = replacements.length
         }
 
         const projects = await getConnection().query(`
-            select p.*, 
-            json_build_object(
-                'id', u.id,
-                'username', u.username,
-                'email', u.email,
-                'createdAt', u."createdAt", 
-                'updatedAt', u."updatedAt"
-                ) creator,
-                ${req.session.userId 
-                ? '(select value from updoot where "userId" = $2 and "projectId" = p.id) "voteStatus"' 
-                : 'null as "voteStatus" '}
-                
-
+            select p.*
             from project p
-            inner join public.user u on u.id = p."creatorId"
-            ${cursor ? `where p."createdAt" < $${cursorIndex} ` : ""}
+            ${cursor ? `where p."createdAt" < $2` : ""}
             order by p."createdAt" DESC
             limit $1
         `,
@@ -156,7 +159,7 @@ export class ProjectResolver {
 
     @Query(() => Project, {nullable: true})
     project(@Arg('id', () => Int ) id: number): Promise<Project | undefined> {
-        return Project.findOne(id, {relations: ["creator"]})
+        return Project.findOne(id)
     }
 
     @Mutation(() => Project)
@@ -172,19 +175,26 @@ export class ProjectResolver {
     }
 
     @Mutation(() => Project, {nullable: true})
+    @UseMiddleware(isAuth)
     async updateProject(
-        @Arg('id') id: number,
-        @Arg ('name',  () => String, {nullable: true}) name: string
-        ):Promise<Project | null> {
-        const project =  await Project.findOne(id);
+        @Arg('id', ()=> Int) id: number,
+        @Arg ('name') name: string,
+        @Arg ('text') text: string,
+        @Ctx () {req}: MyContext,
 
-        if (!project) {
-            return null
-        }
-        if (typeof name !== "undefined") {
-            await Project.update({id}, {name});
-        }
-        return project;
+        ):Promise<Project | null> {
+            const result = await 
+            getConnection()
+            .createQueryBuilder()
+            .update(Project)
+            .set({  name, text})
+            .where('id = :id and "creatorId" = :creatorId', { id, creatorId:req.session.userId})
+            .returning("*")
+            .execute();
+ 
+
+            return result.raw[0] as any
+       
     }
 
     @Mutation(() => Boolean)
@@ -193,16 +203,19 @@ export class ProjectResolver {
         @Arg('id', () => Int) id: number, 
         @Ctx() {req}:MyContext
         ):Promise<boolean> {
-            const project = await Project.findOne(id)
-            if (!project) {
-                return false
-            }
-            if (project.creatorId !== req.session.userId) {
-                throw new Error('not authorized')
-            }
-            await Updoot.delete({projectId: id})
-            await Project.delete({id})
 
+            //not cascade way 
+            // const project = await Project.findOne(id)
+            // if (!project) {
+            //     return false
+            // }
+            // if (project.creatorId !== req.session.userId) {
+            //     throw new Error('not authorized')
+            // }
+            // await Updoot.delete({projectId: id})
+            // await Project.delete({id})
+
+            await Project.delete({id, creatorId: req.session.userId})
             return true;
     }
 }

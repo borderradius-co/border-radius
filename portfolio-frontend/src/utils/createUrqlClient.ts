@@ -19,6 +19,8 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
 };
 
 
+
+
 const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
     const { parentKey: entityKey, fieldName } = info;
@@ -53,6 +55,16 @@ const cursorPagination = (): Resolver => {
 
   };
 };
+
+function invalidateAllProjects(cache: Cache) {
+  const allFields = cache.inspectFields('Query');
+  const fieldInfos = allFields.filter(
+    (info) => info.fieldName === "projects"
+    );
+  fieldInfos.forEach((field)=> {
+    cache.invalidate('Query', 'projects', field.arguments || { })
+  })
+}
 
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
@@ -121,13 +133,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
           createProject: (_result, args, cache, info) => {
             // console.log("start")
             // console.log(cache.inspectFields('Query'))
-            const allFields = cache.inspectFields('Query');
-            const fieldInfos = allFields.filter(
-              (info) => info.fieldName === "projects"
-              );
-            fieldInfos.forEach((field)=> {
-              cache.invalidate('Query', 'projects', field.arguments || { })
-            })
+            invalidateAllProjects(cache)
           
             // console.log(cache.inspectFields('Query'))
           },
@@ -146,8 +152,10 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                     me: result.login.user,
                   }
                 }
-
               })
+              
+            invalidateAllProjects(cache)
+
           },
           register: (_result, args, cache, info) => {
             betterUpdateQuery<RegisterMutation, MeQuery>(cache, {query: MeDocument},

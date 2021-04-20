@@ -1,14 +1,15 @@
 import { NavBar } from "../components/NavBar";
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from "../utils/createUrqlClient";
-import {useProjectsQuery}  from "../generated/graphql"
+import {useMeQuery, useProjectsQuery, useUpdateProjectMutation}  from "../generated/graphql"
 import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 import {Box, Button, Flex, Heading, Link, Stack, Text, Icon, IconButton } from "@chakra-ui/react"
 import React, { useState } from "react";
-import { DeleteIcon } from '@chakra-ui/icons'
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import { UpdootSection } from "../components/UpdootSection";
 import {useDeleteProjectMutation} from "../generated/graphql"
+import { EditDeleteProjectButtons } from "../components/EditDeleteProjectButtons";
 
 
 const Index = () => {
@@ -50,12 +51,11 @@ const Index = () => {
                                          
                             <Text mt={4}>{project.text}</Text>
                             <Text>Created by {project.creator.username}</Text> 
-                            <IconButton 
-                            onClick={()=> {
-                                deleteProject({id: project.id})
-                                }}
-                            aria-label="Delete project" 
-                            icon={<DeleteIcon/>} />
+                            <Box marginLeft="auto">
+                               <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} />
+                            </Box>
+                            
+                            
                         </Box>          
                     </Flex>
 

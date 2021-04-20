@@ -15,6 +15,8 @@ import { Project } from "./entities/Project";
 import { User } from "./entities/User";
 import path from "path";
 import { Updoot } from "./entities/Updoot";
+import { createUserLoader } from "./utils/CreateUserLoader";
+import { createUpdootLoader } from "./utils/CreateUpdootLoader";
 
 const main = async () => {
 
@@ -69,7 +71,7 @@ const main = async () => {
             resolvers :[HelloResolver, ProjectResolver, UserResolver],
             validate: false
         }),
-        context: ({req, res}) => ({ req, res, redis})
+        context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(),})
     });
 
     apolloserver.applyMiddleware({app, cors: false});
