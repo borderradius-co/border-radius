@@ -1,8 +1,19 @@
 import React from 'react'
-import {Box, Button, Flex, Heading, Link} from "@chakra-ui/react"
+import {Box, Button, Flex, Text, Heading, Link, useDisclosure,Modal, ModalContent, ModalOverlay, Menu, MenuButton, IconButton, MenuList, MenuItem, Spacer, MenuGroup, Icon,} from "@chakra-ui/react"
 import NextLink from "next/link"
-import { useMeQuery, useLogoutMutation } from "../generated/graphql";
+import { useMeQuery, useLogoutMutation, useLoginMutation } from "../generated/graphql";
 import {useRouter} from "next/router"
+import Wrapper from "../components/Wrapper"
+import { toErrorMap } from '../utils/toErrorMap';
+import { Form, Formik} from 'formik'
+import InputField from '../components/InputField';
+import LoginOption from './LoginOption';
+import { AddIcon, HamburgerIcon, LockIcon, UnlockIcon } from '@chakra-ui/icons';
+import { MdPerson, MdLockOpen, MdHome } from "react-icons/md";
+import RegisterOption from './RegisterOption';
+import { HomeOption } from './HomeOptions';
+
+
 // import { isServer } from '../utils/isServer';
 
 interface NavBarProps {
@@ -11,6 +22,8 @@ interface NavBarProps {
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
         const router = useRouter()
+        const {onOpen, isOpen, onClose} = useDisclosure()
+        const [, login] = useLoginMutation();
         const [{fetching: logoutFetching}, logout] = useLogoutMutation();
         const [{data, fetching}] = useMeQuery(
             // {pause: isServer(),}
@@ -24,46 +37,61 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         //user is not logged in
         } else if (!data?.me) {
             body =
-            <>
-            <NextLink href="/login">
-                <Link marginRight={2} >Login</Link>
-            </NextLink>
-
-            <NextLink href="/register">
-                <Link fontWeight="">Register</Link>
-            </NextLink>
-            </>
+                <MenuGroup title="Account">
+                    <LoginOption/>
+                    <RegisterOption/>
+                </MenuGroup>
+              
+         
         //user is logged in
         } else  {
             body = 
-            <Flex>
-                <Box 
-                marginRight={2} 
-                >
-                    {data.me.username}
-                </Box> 
-                <Button 
-                onClick={async () => {
-                    await logout();
-                    router.reload()
-                }} 
-                variant="link" 
-                isLoading={logoutFetching} 
-                color="black" 
-                fontWeight="medium" >
-                        logout
-                </Button>
-            </Flex>
+           
+            
+                <MenuGroup title={data.me.username}>
+                    {/* <MenuItem
+                    _hover={{ bg:"none"}}
+                    icon={<Icon as={MdPerson}></Icon>}>
+                        {data.me.username}
+                    </MenuItem> */}
+                    <MenuItem 
+                    icon={<Icon as={MdLockOpen}></Icon>}
+                    onClick={async () => {
+                        await logout();
+                        router.reload()
+                    }}>
+                        Logout
+                    </MenuItem>
+                </MenuGroup>  
+    
 
         }
         return (
-            <Flex zIndex={1} position="sticky" top={0} bg="divar" padding={4} align="center">
-                <NextLink href="/">
-                    <Link>
-                        <Heading size="xs" fontWeight="medium">Border Radius</Heading>
-                    </Link>
-                </NextLink>
-                <Box marginLeft="auto">{body}</Box> 
+
+            
+            <Flex zIndex={1} position="sticky" top={0} padding={4}  >
+                <Flex>
+                <Menu>
+                    <MenuButton
+                    as={IconButton}
+                    aria-label="Options"
+                    variant="unstyled"
+                    icon={<HamburgerIcon/>}
+                    _focus={{bg:"none"}}
+                    />
+                    <MenuList>
+                    <HomeOption/>
+                    {body}  
+                    </MenuList> 
+                </Menu> 
+                </Flex>
+               
+              
             </Flex>
+
         );
 }
+
+
+
+

@@ -7,6 +7,7 @@ import Router from "next/router";
 import gql from "graphql-tag"
 import { isServer } from "./isServer";
 
+
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
   return pipe(
     forward(ops$),
