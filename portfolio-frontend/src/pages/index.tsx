@@ -6,7 +6,6 @@ import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 import {Box, Button, Flex, Heading, Link, Stack, Text, Icon, IconButton } from "@chakra-ui/react"
 import React, { useState } from "react";
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import { UpdootSection } from "../components/UpdootSection";
 import {useDeleteProjectMutation} from "../generated/graphql"
 import { EditDeleteProjectButtons } from "../components/EditDeleteProjectButtons";
@@ -75,7 +74,6 @@ const Index = () => {
                     })
                 }} 
                 isLoading={fetching} 
-                textColor="black"  
                 marginY="8" 
                 variant="link">Load more...</Button>
             </Flex> 
