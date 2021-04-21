@@ -1,27 +1,39 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box, Button, Text, Link,Divider, Flex, Heading} from '@chakra-ui/react';
-import Wrapper from "../components/Wrapper"
-import InputField from '../components/InputField';
+import { Box,Text, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter} from '@chakra-ui/react';
+import Wrapper from "./Wrapper"
+import InputField from './InputField';
 import { useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
-import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../utils/createUrqlClient';
-import { Layout } from '../components/Layout';
+import { MdFingerprint } from "react-icons/md";
 import NextLink from "next/link"
 
-interface registerProps {
+interface RegisterOptionModalProps {
 
 }
 
 
 
-const Register: React.FC<registerProps> = ({}) => {
+const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
     const router = useRouter(); 
     const [, register] = useRegisterMutation();
+    const { isOpen, onClose, onOpen } = useDisclosure()
     return (
-        <Layout>
+        <>
+        <Button 
+        variant="link" 
+        _focus={{bg:"none"}} 
+        style={{textDecoration: "none"}} 
+        color="green.200"
+        leftIcon={<MdFingerprint/>} fontWeight="hairline" onClick={onOpen}>Sign up</Button>
+        <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose} >
+            <ModalOverlay/>
+            <ModalContent bg="gray.900" height="2xl">
+                <ModalHeader fontWeight="thin" >Welcome</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody pb={6}>
+                <Wrapper variant={'small'}>
         <Formik initialValues={{email: '',username: '', password: ''}} onSubmit={async (values, {setErrors}) => {
             const response = await register({options: values});
             if (response.data?.register.errors) {
@@ -35,6 +47,7 @@ const Register: React.FC<registerProps> = ({}) => {
                 <Form>
                     <Heading fontWeight="medium" marginBottom={4} size="lg" >Welcome to Border Radius</Heading>
                     <Divider marginBottom={8}></Divider>
+
                     <InputField 
                     name="username"
                     placeholder="username"
@@ -57,26 +70,36 @@ const Register: React.FC<registerProps> = ({}) => {
                     type="password"
                     />
                     </Box>
+                    <Divider marginTop={8} marginBottom={4}></Divider>
+
                     <Flex marginTop={4}>
                         <Text>Already have an account?</Text>
                         <NextLink href="/login">
                             <Link color="green.200" marginLeft="2">Sign in instead</Link>
                         </NextLink>
-                    </Flex>  
-                    <Flex align="center" padding="0" marginTop="4">
-                        <NextLink href="/">
-                        <Button marginLeft="auto"  variant="ghost" marginRight={4}>Cancel</Button>
-
-                        </NextLink>
-                        <Button type="submit" variant="outline" color="green.200" isLoading={isSubmitting}>Sign up</Button>
                     </Flex>
-
+                    <ModalFooter marginTop={8} padding={0}>
+                    <Button variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
+                    <Button 
+                    type="submit"
+                    variant="outline"
+                    color="green.200"
+                    isLoading={isSubmitting}>Sign up</Button>
+                    </ModalFooter> 
+                    
+                    
                 </Form>
             )}
         </Formik>
-        </Layout>
-      
+        </Wrapper>        
+
+                </ModalBody>
+            </ModalContent>
+
+        </Modal>
+        </>
+        
     );
 }
 
-export default withUrqlClient(createUrqlClient)(Register);
+export default RegisterOptionModal;
