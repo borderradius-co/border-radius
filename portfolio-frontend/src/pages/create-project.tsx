@@ -1,4 +1,4 @@
-import { Box, Flex, Link, Button } from '@chakra-ui/react';
+import { Box, Flex, Link, Button, useToast } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import { withUrqlClient } from 'next-urql';
 import router from 'next/router';
@@ -16,6 +16,7 @@ import { useIsAuth } from '../utils/useIsAuth';
 const CreateProject: React.FC<{}> = ({}) => {
         useIsAuth();
         const [, createProject] = useCreateProjectMutation();
+        const toast = useToast()
         return (
             <Layout variant="small">
                 <Formik 
@@ -23,7 +24,7 @@ const CreateProject: React.FC<{}> = ({}) => {
                 onSubmit={async (values) => {
                     const {error} = await createProject({input: values})
                     if (!error) {
-                        router.push("/");
+                        router.push("/projects");
                     } 
         }}
         >

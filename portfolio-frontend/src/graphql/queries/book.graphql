@@ -1,0 +1,13 @@
+query Book($id: Float!) {
+  book(id: $id) {
+    title
+    id
+    comments {
+      id
+      text
+      user {
+        username
+      }
+    }
+  }
+}

@@ -1,10 +1,11 @@
-import { Heading, Box } from '@chakra-ui/react';
+import { Heading, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import React from 'react'
 import { EditDeleteProjectButtons } from '../../components/EditDeleteProjectButtons';
 import { Layout } from '../../components/Layout';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { useGetProjectFromUrl } from '../../utils/useGetProjectFromUrl';
+import NextLink from "next/link"
 
 export const Project: React.FC<{}> = ({}) => {
     const [{data, fetching, error}] = useGetProjectFromUrl()
@@ -33,6 +34,17 @@ export const Project: React.FC<{}> = ({}) => {
    
         return (
             <Layout>
+                <Breadcrumb marginBottom="24px">
+                <BreadcrumbItem>
+                <NextLink href="/projects">
+                    <BreadcrumbLink> Projects </BreadcrumbLink>
+                </NextLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem isCurrentPage>
+                    <BreadcrumbLink>{data.project.name}
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                </Breadcrumb>
                 <Heading marginBottom={4}>{data.project.name}</Heading>
                 {data.project.text}
                 <EditDeleteProjectButtons id={data.project.id} creatorId={data.project.creator.id } />

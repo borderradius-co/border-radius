@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box,Text, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter} from '@chakra-ui/react';
+import { Box,Text, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
 import Wrapper from "./Wrapper"
 import InputField from './InputField';
 import { useRegisterMutation } from '../generated/graphql';
@@ -19,17 +19,18 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
     const router = useRouter(); 
     const [, register] = useRegisterMutation();
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const toast = useToast()
     return (
         <>
         <Button 
         variant="link" 
         _focus={{bg:"none"}} 
         style={{textDecoration: "none"}} 
-        color="green.200"
+        color="green.600"
         leftIcon={<MdFingerprint/>} fontWeight="hairline" onClick={onOpen}>Sign up</Button>
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose} >
             <ModalOverlay/>
-            <ModalContent bg="gray.900" height="2xl">
+            <ModalContent height="2xl">
                 <ModalHeader fontWeight="thin" >Welcome</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
@@ -75,15 +76,24 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                     <Flex marginTop={4}>
                         <Text>Already have an account?</Text>
                         <NextLink href="/login">
-                            <Link color="green.200" marginLeft="2">Sign in instead</Link>
+                            <Link color="green.600" marginLeft="2">Sign in instead</Link>
                         </NextLink>
                     </Flex>
                     <ModalFooter marginTop={8} padding={0}>
-                    <Button variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
+                    <Button variant="ghost" color="gray.500"  onClick={onClose} marginRight={4}>Cancel</Button>
                     <Button 
+                    onClick={async () => {
+                        toast({
+                            title:`You have successfully signed up`,
+                            variant:"solid",
+                            isClosable:true,
+                            status:"success",
+                            position:"top-right"
+                        })
+                    }} 
                     type="submit"
                     variant="outline"
-                    color="green.200"
+                    color="green.600"
                     isLoading={isSubmitting}>Sign up</Button>
                     </ModalFooter> 
                     

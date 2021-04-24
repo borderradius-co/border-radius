@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box, Button, Text,Divider, Flex, Heading, Link} from '@chakra-ui/react';
+import { Box, Button, Text,Divider, Flex, Heading, Link, useToast} from '@chakra-ui/react';
 import Wrapper from "../components/Wrapper"
 import InputField from '../components/InputField';
-import { useLoginMutation } from '../generated/graphql';
+import { useLoginMutation, useMeQuery } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
 import { withUrqlClient } from 'next-urql';
@@ -19,6 +19,8 @@ interface registerProps {
 const Login: React.FC<{}> = ({}) => {
     const router = useRouter(); 
     const [, login] = useLoginMutation();
+    const [{data, fetching}] = useMeQuery()
+    const toast = useToast()
     return (
         <Layout variant="small">
 
@@ -31,7 +33,7 @@ const Login: React.FC<{}> = ({}) => {
                 if (typeof router.query.next === "string") {
                     router.push(router.query.next)
                 } else {
-                    router.push("/")
+                    router.push("/projects")
                 }
             }
         }}>
@@ -71,7 +73,20 @@ const Login: React.FC<{}> = ({}) => {
                         <Button marginLeft="auto"  variant="ghost" marginRight={4}>Cancel</Button>
 
                         </NextLink>
-                        <Button type="submit" variant="outline" color="green.200" isLoading={isSubmitting}>Login</Button>
+                        <Button
+                         onClick={async () => {
+                            toast({
+                                title:`You have successfully logged in`,
+                                variant:"solid",
+                                isClosable:true,
+                                status:"success",
+                                position:"top-right"
+                            })
+                        }} 
+                         type="submit" 
+                         variant="outline" 
+                         color="green.200"  
+                         isLoading={isSubmitting}>Login</Button>
                     </Flex>
 
                    

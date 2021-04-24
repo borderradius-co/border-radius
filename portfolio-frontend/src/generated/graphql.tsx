@@ -14,6 +14,34 @@ export type Scalars = {
   Float: number;
 };
 
+export type Book = {
+  __typename?: 'Book';
+  id: Scalars['Float'];
+  title: Scalars['String'];
+  comments: Array<Comment>;
+};
+
+export type BookToComment = {
+  id: Scalars['Float'];
+};
+
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['Float'];
+  text: Scalars['String'];
+  userId: Scalars['Float'];
+  user: User;
+  books: Array<Book>;
+};
+
+export type CreateBookInput = {
+  title: Scalars['String'];
+};
+
+export type CreateCommentInput = {
+  text: Scalars['String'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -31,6 +59,12 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  createComment: Comment;
+  updateComment: Comment;
+  deleteComment: Comment;
+  createBook: Book;
+  updateBook: Book;
+  deleteBook: Book;
 };
 
 
@@ -78,6 +112,39 @@ export type MutationLoginArgs = {
   usernameOrEmail: Scalars['String'];
 };
 
+
+export type MutationCreateCommentArgs = {
+  books: Array<BookToComment>;
+  comment: CreateCommentInput;
+};
+
+
+export type MutationUpdateCommentArgs = {
+  comment: CreateCommentInput;
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteCommentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationCreateBookArgs = {
+  book: CreateBookInput;
+};
+
+
+export type MutationUpdateBookArgs = {
+  book: CreateBookInput;
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteBookArgs = {
+  id: Scalars['String'];
+};
+
 export type PaginatedProjects = {
   __typename?: 'PaginatedProjects';
   projects: Array<Project>;
@@ -109,6 +176,10 @@ export type Query = {
   projects: PaginatedProjects;
   project?: Maybe<Project>;
   me?: Maybe<User>;
+  comments: Array<Comment>;
+  comment?: Maybe<Comment>;
+  books: Array<Book>;
+  book?: Maybe<Book>;
 };
 
 
@@ -120,6 +191,33 @@ export type QueryProjectsArgs = {
 
 export type QueryProjectArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryCommentsArgs = {
+  text?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryCommentArgs = {
+  id?: Maybe<Scalars['Float']>;
+  text?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryBooksArgs = {
+  title?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryBookArgs = {
+  id?: Maybe<Scalars['Float']>;
+  title?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
 };
 
 export type User = {
@@ -184,6 +282,44 @@ export type ChangePasswordMutation = (
   & { changePassword: (
     { __typename?: 'UserResponse' }
     & DefaultUserResponseFragment
+  ) }
+);
+
+export type CreateBookMutationVariables = Exact<{
+  title: Scalars['String'];
+}>;
+
+
+export type CreateBookMutation = (
+  { __typename?: 'Mutation' }
+  & { createBook: (
+    { __typename?: 'Book' }
+    & Pick<Book, 'id' | 'title'>
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'text'>
+    )> }
+  ) }
+);
+
+export type CreateCommentMutationVariables = Exact<{
+  text: Scalars['String'];
+  id: Scalars['Float'];
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'text'>
+    & { books: Array<(
+      { __typename?: 'Book' }
+      & Pick<Book, 'id'>
+    )>, user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    ) }
   ) }
 );
 
@@ -279,6 +415,44 @@ export type VoteMutationVariables = Exact<{
 export type VoteMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'vote'>
+);
+
+export type BookQueryVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type BookQuery = (
+  { __typename?: 'Query' }
+  & { book?: Maybe<(
+    { __typename?: 'Book' }
+    & Pick<Book, 'title' | 'id'>
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'text'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'username'>
+      ) }
+    )> }
+  )> }
+);
+
+export type BooksQueryVariables = Exact<{
+  take: Scalars['Int'];
+}>;
+
+
+export type BooksQuery = (
+  { __typename?: 'Query' }
+  & { books: Array<(
+    { __typename?: 'Book' }
+    & Pick<Book, 'title' | 'id'>
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'text' | 'id'>
+    )> }
+  )> }
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -379,6 +553,40 @@ export const ChangePasswordDocument = gql`
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
 };
+export const CreateBookDocument = gql`
+    mutation CreateBook($title: String!) {
+  createBook(book: {title: $title}) {
+    id
+    title
+    comments {
+      id
+      text
+    }
+  }
+}
+    `;
+
+export function useCreateBookMutation() {
+  return Urql.useMutation<CreateBookMutation, CreateBookMutationVariables>(CreateBookDocument);
+};
+export const CreateCommentDocument = gql`
+    mutation CreateComment($text: String!, $id: Float!) {
+  createComment(comment: {text: $text}, books: {id: $id}) {
+    id
+    text
+    books {
+      id
+    }
+    user {
+      username
+    }
+  }
+}
+    `;
+
+export function useCreateCommentMutation() {
+  return Urql.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument);
+};
 export const CreateProjectDocument = gql`
     mutation CreateProject($input: ProjectInput!) {
   createProject(input: $input) {
@@ -467,6 +675,41 @@ export const VoteDocument = gql`
 
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
+};
+export const BookDocument = gql`
+    query Book($id: Float!) {
+  book(id: $id) {
+    title
+    id
+    comments {
+      id
+      text
+      user {
+        username
+      }
+    }
+  }
+}
+    `;
+
+export function useBookQuery(options: Omit<Urql.UseQueryArgs<BookQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<BookQuery>({ query: BookDocument, ...options });
+};
+export const BooksDocument = gql`
+    query Books($take: Int!) {
+  books(take: $take) {
+    title
+    id
+    comments {
+      text
+      id
+    }
+  }
+}
+    `;
+
+export function useBooksQuery(options: Omit<Urql.UseQueryArgs<BooksQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<BooksQuery>({ query: BooksDocument, ...options });
 };
 export const MeDocument = gql`
     query Me {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Field, Form, Formik} from 'formik';
-import { Box, Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider} from '@chakra-ui/react';
+import { Box, Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast} from '@chakra-ui/react';
 import Wrapper from "./Wrapper";
 import InputField from './InputField';
-import { useLoginMutation } from '../generated/graphql';
+import { useLoginMutation, useMeQuery } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router";
 import NextLink from "next/link";
@@ -15,14 +15,21 @@ interface LoginOptionModalProps {
 
 const LoginModal: React.FC<{}> = ({}) => {
     const router = useRouter(); 
+    const id = "username-toast"
+    const callback = () => alert(`You are logged in as ${data?.me?.username}`)
+
+
     const [, login] = useLoginMutation();
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const [{data, fetching}] = useMeQuery()
+    const toast = useToast()
+
     return (
         <>
         <Button  variant="link" fontWeight="hairline" _focus={{bg:"none"}} style={{textDecoration: "none"}} onClick={onOpen} leftIcon={<MdLockOpen/>} marginRight="4" >Login</Button>
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
-            <ModalContent bg="gray.900" height="2xl">
+            <ModalContent height="2xl">
             <ModalHeader fontWeight="thin" >Welcome</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
@@ -35,10 +42,20 @@ const LoginModal: React.FC<{}> = ({}) => {
                 } else if(response.data?.login.user) {
                     if (typeof router.query.next === "string") {
                         router.push(router.query.next)
+
                     } else {
-                        router.push("/")
+                        router.push("/projects")
+                        // const callback = () => alert(`Signed in as ${data!.me!.username}`)
+                        // setTimeout(callback, 5000)  
+
+                   
+
                     }
+                  
                 }
+
+
+             
             }}>
             {({isSubmitting}) => (
                 <Form>
@@ -63,7 +80,7 @@ const LoginModal: React.FC<{}> = ({}) => {
                     </Box>
                     <Flex marginTop={2}>
                     <NextLink href="/forgot-password"> 
-                        <Link color="blue.100" ml="auto" fontSize="xs" >Forgot Password?</Link>
+                        <Link color="blue.600" ml="auto" fontSize="xs" >Forgot Password?</Link>
                     </NextLink>
                     </Flex>
                     <Divider marginTop={4} marginBottom={4}></Divider>
@@ -71,16 +88,25 @@ const LoginModal: React.FC<{}> = ({}) => {
                     <Flex marginTop={4}>
                         <Text>Don't have an account?</Text>
                         <NextLink href="/register">
-                            <Link color="green.200" marginLeft="2">Sign up now</Link>
+                            <Link color="green.600" marginLeft="2">Sign up now</Link>
                         </NextLink>
                     </Flex>  
 
                     <ModalFooter marginTop={8} padding={0}>
-                    <Button variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
+                    <Button color="gray.500" variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
                     <Button 
+                    onClick={async () => {
+                        toast({
+                            title:`You have successfully logged in`,
+                            variant:"solid",
+                            isClosable:true,
+                            status:"success",
+                            position:"top-right"
+                        })
+                    }} 
                     type="submit"
                     variant="outline"
-                    color="green.200"
+                    color="green.600"
                     isLoading={isSubmitting}>Login</Button>
                     </ModalFooter> 
                          

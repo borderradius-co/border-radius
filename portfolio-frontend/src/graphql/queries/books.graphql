@@ -1,0 +1,10 @@
+query Books($take: Int!) {
+  books(take: $take) {
+    title
+    id
+    comments {
+      text
+      id
+    }
+  }
+}

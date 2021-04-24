@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box, Button, Text, Link,Divider, Flex, Heading} from '@chakra-ui/react';
+import { Box, Button, Text, Link,Divider, Flex, Heading, useToast} from '@chakra-ui/react';
 import Wrapper from "../components/Wrapper"
 import InputField from '../components/InputField';
 import { useRegisterMutation } from '../generated/graphql';
@@ -18,6 +18,7 @@ interface registerProps {
 
 
 const Register: React.FC<registerProps> = ({}) => {
+    const toast = useToast( )
     const router = useRouter(); 
     const [, register] = useRegisterMutation();
     return (
@@ -68,7 +69,20 @@ const Register: React.FC<registerProps> = ({}) => {
                         <Button marginLeft="auto"  variant="ghost" marginRight={4}>Cancel</Button>
 
                         </NextLink>
-                        <Button type="submit" variant="outline" color="green.200" isLoading={isSubmitting}>Sign up</Button>
+                        <Button
+                        onClick={async () => {
+                            toast({
+                                title:`You have successfully signed up`,
+                                variant:"solid",
+                                isClosable:true,
+                                status:"success",
+                                position:"top-right"
+                            })
+                        }}  
+                        type="submit" 
+                        variant="outline" 
+                        color="green.200" 
+                        isLoading={isSubmitting}>Sign up</Button>
                     </Flex>
 
                 </Form>
