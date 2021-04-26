@@ -38,7 +38,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 icon={<MdMoreVert />}
                 _hover={{bg:"none"}}
                 _focus={{bg:"none"}}
-                variant="unstyled"
+                _active={{bg:"none"}}
+                variant="outline"
+                borderColor="#e1e1e1"
               />
              
               <MenuList>

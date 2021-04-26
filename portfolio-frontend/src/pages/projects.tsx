@@ -51,9 +51,8 @@ const Projects = () => {
                             <Text mt={4}>{project.text}</Text>
                             <Text>Created by {project.creator.username}</Text> 
                             <Box marginLeft="auto">
-                               <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} />
+                               <EditDeleteProjectButtons name={project.name} id={project.id} creatorId={project.creator.id} />
                             </Box>
-                            
                             
                         </Box>          
                     </Flex>

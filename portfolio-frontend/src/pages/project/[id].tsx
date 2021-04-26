@@ -1,4 +1,4 @@
-import { Heading, Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import { Heading, Text,Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import React from 'react'
 import { EditDeleteProjectButtons } from '../../components/EditDeleteProjectButtons';
@@ -36,7 +36,6 @@ export const Project: React.FC<{}> = ({}) => {
             <Layout>
                 <Breadcrumb marginBottom="24px">
                 <BreadcrumbItem>
-                
                 <NextLink href="/projects">
                     <BreadcrumbLink> Projects </BreadcrumbLink>
                 </NextLink>
@@ -46,7 +45,14 @@ export const Project: React.FC<{}> = ({}) => {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 </Breadcrumb>
-                <EditDeleteProjectButtons  id={data.project.id}  creatorId={data.project.creator.id } name={data.project.name} />
+                <Flex width="100%" justify="flex-end" flexDirection="row">
+                    <EditDeleteProjectButtons 
+                    id={data.project.id}  
+                    creatorId={data.project.creator.id } 
+                    name={data.project.name} 
+                    />
+                </Flex>
+               
                 <Heading marginBottom={4}>{data.project.name}</Heading>
                 {data.project.text}
             </Layout>
