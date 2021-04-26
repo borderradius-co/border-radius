@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Button, Flex, Text, Heading,useToast, IconButton, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Divider} from "@chakra-ui/react"
+import {Box, Button, Flex, Text, Heading,useToast, IconButton, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Divider, Avatar} from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useMeQuery, useLogoutMutation } from "../generated/graphql";
 import {useRouter} from "next/router"
@@ -47,7 +47,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             variant="link" 
             _focus={{bg:"none"}} 
             style={{textDecoration: "none"}} 
-            color="green.600"
+            color="#8D036F"
             leftIcon={<MdExitToApp/>} fontWeight="hairline" >
             
             Logout
@@ -55,8 +55,14 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             </>
         }
         return (
-            <Flex zIndex={1} position="sticky" top={0}  p={4}>
+            <Flex zIndex={1} position="sticky" top={0}  p={4} bg="white">
+                
                 <Flex flex={1} m="auto" align="center" maxW={800}>
+                <NextLink href="/">
+                    <Avatar marginRight="4" size="sm" src ="./images/border-radius.svg"/>
+                </NextLink>
+                
+                    
                 <Home/>
                 {body}    
                 </Flex>

@@ -36,6 +36,7 @@ export const Project: React.FC<{}> = ({}) => {
             <Layout>
                 <Breadcrumb marginBottom="24px">
                 <BreadcrumbItem>
+                
                 <NextLink href="/projects">
                     <BreadcrumbLink> Projects </BreadcrumbLink>
                 </NextLink>
@@ -45,9 +46,9 @@ export const Project: React.FC<{}> = ({}) => {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 </Breadcrumb>
+                <EditDeleteProjectButtons  id={data.project.id}  creatorId={data.project.creator.id } name={data.project.name} />
                 <Heading marginBottom={4}>{data.project.name}</Heading>
                 {data.project.text}
-                <EditDeleteProjectButtons id={data.project.id} creatorId={data.project.creator.id } />
             </Layout>
         );
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box,Text, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
+import { Box,Text,Avatar, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
 import Wrapper from "./Wrapper"
 import InputField from './InputField';
 import { useRegisterMutation } from '../generated/graphql';
@@ -26,12 +26,17 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
         variant="link" 
         _focus={{bg:"none"}} 
         style={{textDecoration: "none"}} 
-        color="green.600"
+        color="#8D036F"
         leftIcon={<MdFingerprint/>} fontWeight="hairline" onClick={onOpen}>Sign up</Button>
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose} >
             <ModalOverlay/>
             <ModalContent height="2xl">
-                <ModalHeader fontWeight="thin" >Welcome</ModalHeader>
+                <ModalHeader fontWeight="thin" >
+                <Avatar marginRight="4" size="sm" src="./images/border-radius.svg"></Avatar>
+
+                    Border Radius
+                    
+                    </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                 <Wrapper variant={'small'}>
@@ -76,7 +81,7 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                     <Flex marginTop={4}>
                         <Text>Already have an account?</Text>
                         <NextLink href="/login">
-                            <Link color="green.600" marginLeft="2">Sign in instead</Link>
+                            <Link color="#8D036F" marginLeft="2">Sign in instead</Link>
                         </NextLink>
                     </Flex>
                     <ModalFooter marginTop={8} padding={0}>
@@ -93,7 +98,8 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                     }} 
                     type="submit"
                     variant="outline"
-                    color="green.600"
+                    color="#8D036F"
+                    borderColor="#8D036F"
                     isLoading={isSubmitting}>Sign up</Button>
                     </ModalFooter> 
                     

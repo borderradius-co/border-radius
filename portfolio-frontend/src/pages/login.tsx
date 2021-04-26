@@ -43,21 +43,19 @@ const Login: React.FC<{}> = ({}) => {
                     <Divider marginBottom={8}></Divider>
                     <InputField 
                     name="usernameOrEmail"
-                    placeholder="username or email"
                     label="Username or Email"
                     />
                     <Box marginTop={4}>
                    
                     <InputField 
                     name="password"
-                    placeholder="password"
                     label="Password"
                     type="password"
                     /> 
                     </Box>
                     <Flex marginTop={2}>
                     <NextLink href="/forgot-password"> 
-                        <Link color="blue.100" ml="auto" fontSize="xs" >Forgot Password?</Link>
+                        <Link color="blue" ml="auto" fontSize="xs" >Forgot Password?</Link>
                     </NextLink>
                     </Flex>
                     <Divider marginTop={4} marginBottom={4}></Divider>
@@ -65,7 +63,7 @@ const Login: React.FC<{}> = ({}) => {
                     <Flex marginTop={4}>
                         <Text>Don't have an account?</Text>
                         <NextLink href="/register">
-                            <Link color="green.200" marginLeft="2">Sign up now</Link>
+                            <Link color="#8D036F" marginLeft="2">Sign up now</Link>
                         </NextLink>
                     </Flex>  
                     <Flex align="center" padding="0" marginTop="4">
@@ -74,18 +72,10 @@ const Login: React.FC<{}> = ({}) => {
 
                         </NextLink>
                         <Button
-                         onClick={async () => {
-                            toast({
-                                title:`You have successfully logged in`,
-                                variant:"solid",
-                                isClosable:true,
-                                status:"success",
-                                position:"top-right"
-                            })
-                        }} 
                          type="submit" 
                          variant="outline" 
-                         color="green.200"  
+                         color="#8D036F"  
+                         borderColor="#8D036F"
                          isLoading={isSubmitting}>Login</Button>
                     </Flex>
 

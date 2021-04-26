@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, Form, Formik} from 'formik';
-import { Box, Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast} from '@chakra-ui/react';
+import { Box, Image,Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast, Avatar} from '@chakra-ui/react';
 import Wrapper from "./Wrapper";
 import InputField from './InputField';
 import { useLoginMutation, useMeQuery } from '../generated/graphql';
@@ -30,7 +30,14 @@ const LoginModal: React.FC<{}> = ({}) => {
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent height="2xl">
-            <ModalHeader fontWeight="thin" >Welcome</ModalHeader>
+            <ModalHeader  fontWeight="thin">
+            <Avatar marginRight="4" size="sm" src="./images/border-radius.svg"></Avatar>
+
+
+                Border Radius
+                
+                </ModalHeader>
+
             <ModalCloseButton />
             <ModalBody pb={6}>
                 <Wrapper variant="small">
@@ -80,7 +87,7 @@ const LoginModal: React.FC<{}> = ({}) => {
                     </Box>
                     <Flex marginTop={2}>
                     <NextLink href="/forgot-password"> 
-                        <Link color="blue.600" ml="auto" fontSize="xs" >Forgot Password?</Link>
+                        <Link color="blue" ml="auto" fontSize="xs" >Forgot Password?</Link>
                     </NextLink>
                     </Flex>
                     <Divider marginTop={4} marginBottom={4}></Divider>
@@ -88,25 +95,17 @@ const LoginModal: React.FC<{}> = ({}) => {
                     <Flex marginTop={4}>
                         <Text>Don't have an account?</Text>
                         <NextLink href="/register">
-                            <Link color="green.600" marginLeft="2">Sign up now</Link>
+                            <Link color="#8D036F" marginLeft="2">Sign up now</Link>
                         </NextLink>
                     </Flex>  
 
                     <ModalFooter marginTop={8} padding={0}>
                     <Button color="gray.500" variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
-                    <Button 
-                    onClick={async () => {
-                        toast({
-                            title:`You have successfully logged in`,
-                            variant:"solid",
-                            isClosable:true,
-                            status:"success",
-                            position:"top-right"
-                        })
-                    }} 
+                    <Button
                     type="submit"
                     variant="outline"
-                    color="green.600"
+                    color="#8D036F"
+                    borderColor="#8D036F"
                     isLoading={isSubmitting}>Login</Button>
                     </ModalFooter> 
                          

@@ -2,9 +2,11 @@ query Book($id: Float!) {
   book(id: $id) {
     title
     id
+    createdAt
     comments {
       id
       text
+      createdAt
       user {
         username
       }

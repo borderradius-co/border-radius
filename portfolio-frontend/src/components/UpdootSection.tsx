@@ -1,18 +1,19 @@
 import { TriangleUpIcon, TriangleDownIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, Text } from '@chakra-ui/react';
+import { Flex, IconButton, ResponsiveValue, Text } from '@chakra-ui/react';
 import React, { useState } from 'react'
 import { Project, ProjectSnippetFragment, useVoteMutation } from '../generated/graphql';
 
 
 interface UpdootSectionProps {
     project: ProjectSnippetFragment
+    direction?: ResponsiveValue<FlexDirection> | undefined
 }
 
-export const UpdootSection: React.FC<UpdootSectionProps> = ({project}) => {
+export const UpdootSection: React.FC<UpdootSectionProps> = ({project, direction='column'}) => {
     const [loadingState, setLoadingState] = useState<'updoot-loading' | 'downdoot-loading' | 'not-loading'>('not-loading')
     const [, vote] = useVoteMutation()
         return (
-            <Flex direction="column" align="center" justify="center" marginRight="4">
+            <Flex direction={direction} align="center" justify="center" marginTop="4">
                 <IconButton 
                 colorScheme={project.voteStatus === 1 ? "green" : undefined} 
                 variant="link"

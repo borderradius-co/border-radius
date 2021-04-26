@@ -34,6 +34,8 @@ export type Comment = {
   userId: Scalars['Float'];
   user: User;
   books: Array<Book>;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type CreateBookInput = {
@@ -463,10 +465,10 @@ export type BookQuery = (
   { __typename?: 'Query' }
   & { book?: Maybe<(
     { __typename?: 'Book' }
-    & Pick<Book, 'title' | 'id'>
+    & Pick<Book, 'title' | 'id' | 'createdAt'>
     & { comments: Array<(
       { __typename?: 'Comment' }
-      & Pick<Comment, 'id' | 'text'>
+      & Pick<Comment, 'id' | 'text' | 'createdAt'>
       & { user: (
         { __typename?: 'User' }
         & Pick<User, 'username'>
@@ -743,9 +745,11 @@ export const BookDocument = gql`
   book(id: $id) {
     title
     id
+    createdAt
     comments {
       id
       text
+      createdAt
       user {
         username
       }
