@@ -140,6 +140,7 @@ export class UserResolver {
         
 
     }
+    
 
     @Mutation(() => UserResponse)
     async register(

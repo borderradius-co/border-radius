@@ -17,22 +17,35 @@ import path from "path";
 import { Updoot } from "./entities/Updoot";
 import { createUserLoader } from "./utils/CreateUserLoader";
 import { createUpdootLoader } from "./utils/CreateUpdootLoader";
+import { Book } from "./entities/Book";
+import {  CommentResolver } from "./resolvers/comment";
+import { BookResolver } from "./resolvers/book";
+import { createBookLoader } from "./utils/CreateBookLoader";
+import {Comment} from "./entities/Comment"
+
+
+
 
 const main = async () => {
 
     const conn = await createConnection({
         type: 'postgres',
-        database: 'border',
+        database: 'sorkhabi',
         username: 'postgres',
         password: 'postgres',
         logging: true, 
         synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
-        entities: [Project, User, Updoot],
+        entities: [Project, User, Updoot, Book, Comment]
     });
 
     await conn.runMigrations()
     //rerun
+    // await Book.delete({})
+    // await Book.delete({})
+    // await Updoot.delete({})
+    // await User.delete({})
+    // await Module.delete({})
     // await Project.delete({})
     //rerun
 
@@ -68,10 +81,10 @@ const main = async () => {
 
     const apolloserver = new ApolloServer({
         schema: await buildSchema({
-            resolvers :[HelloResolver, ProjectResolver, UserResolver],
+            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver],
             validate: false
         }),
-        context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(),})
+        context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(), createBookLoader: createBookLoader()})
     });
 
     apolloserver.applyMiddleware({app, cors: false});

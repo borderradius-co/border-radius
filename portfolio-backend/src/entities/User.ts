@@ -1,7 +1,8 @@
 import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, BaseEntity , OneToMany} from "typeorm";
 import { Field, ObjectType } from "type-graphql";
 import { Project } from "./Project";
-import {Updoot} from "./Updoot"
+import {Updoot} from "./Updoot";
+import { Comment } from "./Comment";
 
 @ObjectType()
 @Entity()
@@ -26,8 +27,20 @@ export class User extends BaseEntity {
   @OneToMany(() => Project, project => project.creator)
   projects: Project[];
 
+
+  @OneToMany(() => Comment, comment => comment.user)
+  comments: Comment[];
+
+
+  // @OneToMany(() => Comment, comment => comment.writer)
+  // comments: Comment[];
+
+
   @OneToMany(() => Updoot, (updoot) => updoot.user)
-  updoots: Updoot[];  
+  updoots: Updoot[];
+  
+  // @OneToMany(() => Opinion, (opinion) => opinion.user)
+  // opinions: Opinion[];  
 
   @Field(() => String)
   @CreateDateColumn()
