@@ -77,8 +77,8 @@ const UpdateProject = ({}) => {
                     Update Project
                 </Button>
         </Form>
-    )}
-</Formik>
+            )}
+        </Formik>
 
 
     </Layout>);

@@ -1,6 +1,7 @@
 import { Resolver, Query, Args, Arg, Mutation, Authorized, UseMiddleware, ObjectType, Field, Int } from "type-graphql";
 import { Book, BookFilter, BooksFilter, CreateBookInput } from '../entities/Book';
 import { Like, getRepository, getConnection } from 'typeorm';
+
 // import { GraphQLUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
 // import { Upload } from '../../types/Upload';
@@ -20,6 +21,7 @@ class PaginatedBooks {
 @Resolver(Book)
 export class BookResolver {
 
+      
     @Query(returns => [Book])
     async allBooks(
         @Args() { title, skip, take }: BooksFilter
@@ -118,17 +120,6 @@ export class BookResolver {
         return book;
     }
 
-    // @Mutation(returns => Boolean)
-    // async createBookImage(@Arg('file', () => GraphQLUpload) file: Upload) {
-    //     const { filename, mimetype, createReadStream } = await file;
-    //     const acceptedTypes = ['image/jpeg', 'image/png'];
-    //     if (acceptedTypes.indexOf(mimetype) !== -1) {
-    //         const stream = createReadStream();
-    //         stream.pipe(createWriteStream(path.join(__dirname, `../../../images/books/${filename}`)));
-    //         return true;
-    //     }
-    //     throw new Error('Unsupported image type.')
-    // };
 }
 
 // postman operations
