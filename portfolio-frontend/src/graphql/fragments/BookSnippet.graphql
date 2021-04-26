@@ -1,0 +1,6 @@
+fragment BookSnippet on Book {
+  id
+  title
+  createdAt
+  updatedAt
+}

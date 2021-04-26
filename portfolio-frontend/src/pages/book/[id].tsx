@@ -19,7 +19,7 @@ export const Book: React.FC<{}> = ({}) => {
     if (fetching) {
         return (
             <Layout> 
-                <div>loading...l</div>
+                <div>loading...</div>
             </Layout>
         )
     }
@@ -81,7 +81,7 @@ export const Book: React.FC<{}> = ({}) => {
                     <InputField 
                     name="text"
                     placeholder="Add Comment Here"
-                    label="Comment"
+                    label="Add Comment"
                     />
                     </Box>
 

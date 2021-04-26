@@ -1,10 +1,8 @@
-query Books($take: Int!) {
-  books(take: $take) {
-    title
-    id
-    comments {
-      text
-      id
+query Books($limit: Int!, $cursor: String) {
+  books(limit: $limit, cursor: $cursor) {
+    hasMore
+    books {
+      ...BookSnippet
     }
   }
 }

@@ -1,0 +1,10 @@
+query AllBooks($take: Int!) {
+  allBooks(take: $take) {
+    title
+    id
+    comments {
+      text
+      id
+    }
+  }
+}

@@ -18,6 +18,8 @@ export type Book = {
   __typename?: 'Book';
   id: Scalars['Float'];
   title: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
   comments: Array<Comment>;
 };
 
@@ -145,6 +147,12 @@ export type MutationDeleteBookArgs = {
   id: Scalars['String'];
 };
 
+export type PaginatedBooks = {
+  __typename?: 'PaginatedBooks';
+  books: Array<Book>;
+  hasMore: Scalars['Boolean'];
+};
+
 export type PaginatedProjects = {
   __typename?: 'PaginatedProjects';
   projects: Array<Project>;
@@ -178,7 +186,8 @@ export type Query = {
   me?: Maybe<User>;
   comments: Array<Comment>;
   comment?: Maybe<Comment>;
-  books: Array<Book>;
+  allBooks: Array<Book>;
+  books: PaginatedBooks;
   book?: Maybe<Book>;
 };
 
@@ -207,10 +216,16 @@ export type QueryCommentArgs = {
 };
 
 
-export type QueryBooksArgs = {
+export type QueryAllBooksArgs = {
   title?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   take?: Maybe<Scalars['Int']>;
+};
+
+
+export type QueryBooksArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
 };
 
 
@@ -240,6 +255,11 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
   email: Scalars['String'];
 };
+
+export type BookSnippetFragment = (
+  { __typename?: 'Book' }
+  & Pick<Book, 'id' | 'title' | 'createdAt' | 'updatedAt'>
+);
 
 export type DefaultErrorFragment = (
   { __typename?: 'FieldError' }
@@ -417,6 +437,23 @@ export type VoteMutation = (
   & Pick<Mutation, 'vote'>
 );
 
+export type AllBooksQueryVariables = Exact<{
+  take: Scalars['Int'];
+}>;
+
+
+export type AllBooksQuery = (
+  { __typename?: 'Query' }
+  & { allBooks: Array<(
+    { __typename?: 'Book' }
+    & Pick<Book, 'title' | 'id'>
+    & { comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'text' | 'id'>
+    )> }
+  )> }
+);
+
 export type BookQueryVariables = Exact<{
   id: Scalars['Float'];
 }>;
@@ -439,20 +476,21 @@ export type BookQuery = (
 );
 
 export type BooksQueryVariables = Exact<{
-  take: Scalars['Int'];
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
 export type BooksQuery = (
   { __typename?: 'Query' }
-  & { books: Array<(
-    { __typename?: 'Book' }
-    & Pick<Book, 'title' | 'id'>
-    & { comments: Array<(
-      { __typename?: 'Comment' }
-      & Pick<Comment, 'text' | 'id'>
+  & { books: (
+    { __typename?: 'PaginatedBooks' }
+    & Pick<PaginatedBooks, 'hasMore'>
+    & { books: Array<(
+      { __typename?: 'Book' }
+      & BookSnippetFragment
     )> }
-  )> }
+  ) }
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -501,6 +539,14 @@ export type ProjectsQuery = (
   ) }
 );
 
+export const BookSnippetFragmentDoc = gql`
+    fragment BookSnippet on Book {
+  id
+  title
+  createdAt
+  updatedAt
+}
+    `;
 export const DefaultErrorFragmentDoc = gql`
     fragment DefaultError on FieldError {
   field
@@ -676,6 +722,22 @@ export const VoteDocument = gql`
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 };
+export const AllBooksDocument = gql`
+    query AllBooks($take: Int!) {
+  allBooks(take: $take) {
+    title
+    id
+    comments {
+      text
+      id
+    }
+  }
+}
+    `;
+
+export function useAllBooksQuery(options: Omit<Urql.UseQueryArgs<AllBooksQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<AllBooksQuery>({ query: AllBooksDocument, ...options });
+};
 export const BookDocument = gql`
     query Book($id: Float!) {
   book(id: $id) {
@@ -696,17 +758,15 @@ export function useBookQuery(options: Omit<Urql.UseQueryArgs<BookQueryVariables>
   return Urql.useQuery<BookQuery>({ query: BookDocument, ...options });
 };
 export const BooksDocument = gql`
-    query Books($take: Int!) {
-  books(take: $take) {
-    title
-    id
-    comments {
-      text
-      id
+    query Books($limit: Int!, $cursor: String) {
+  books(limit: $limit, cursor: $cursor) {
+    hasMore
+    books {
+      ...BookSnippet
     }
   }
 }
-    `;
+    ${BookSnippetFragmentDoc}`;
 
 export function useBooksQuery(options: Omit<Urql.UseQueryArgs<BooksQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<BooksQuery>({ query: BooksDocument, ...options });
