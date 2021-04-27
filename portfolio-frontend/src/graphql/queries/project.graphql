@@ -16,6 +16,7 @@ query Project($id: Int!) {
       text
       createdAt
       user {
+        id
         username
       }
     }

@@ -1,7 +1,7 @@
 import { Heading, Text,Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Avatar, Button, Divider, HStack, IconButton, VStack } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
 import React from 'react'
-import { EditDeleteProjectButtons } from '../../components/EditDeleteProjectButtons';
+import { EditDeleteCommentButtons } from '../../components/EditDeleteCommentButtons';
 import { Layout } from '../../components/Layout';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import { useGetProjectFromUrl } from '../../utils/useGetProjectFromUrl';
@@ -54,13 +54,9 @@ export const Project: React.FC<{}> = ({}) => {
                     </BreadcrumbLink>
                 </BreadcrumbItem>
                 </Breadcrumb>
-                <Flex width="100%" justify="flex-end" flexDirection="row">
-                    <EditDeleteProjectButtons 
-                    id={data.project.id}  
-                    creatorId={data.project.creator.id } 
-                    name={data.project.name} 
-                    />
-                </Flex>
+            
+                
+                
                
                 <Heading marginBottom={4}>{data.project.name}</Heading>
                 {data.project.text}
@@ -89,19 +85,18 @@ export const Project: React.FC<{}> = ({}) => {
                             <Text textColor="gray.600"  fontWeight="semibold" >{comment.user.username}</Text>
                          
                             </Flex>
-
+                        
                             <Text fontWeight="hairline" >{comment.text}</Text>
                             <Text fontSize="xx-small">{Date(comment.createdAt)}</Text>
 
                        
                         </VStack>
-                        <IconButton 
-                            _hover={{bg:"none"}}
-                            _focus={{bg:"none"}}
-                            variant="unstyled"  
-                            aria-label="More" 
-                            icon={<MdMoreVert/>} 
-                            />
+                        <EditDeleteCommentButtons 
+                        id={comment.id} 
+                        creatorId={comment.user.id}  
+                        variant='none'
+                        />
+                   
                     </HStack>
                         
                     ))}

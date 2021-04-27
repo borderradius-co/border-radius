@@ -1,6 +1,6 @@
-import { Resolver, Query, Args, Arg, Mutation, Authorized, UseMiddleware, Ctx, FieldResolver, Root } from "type-graphql";
+import { Resolver, Query, Args, Arg, Mutation, Authorized, UseMiddleware, Ctx, FieldResolver, Root, Field, ObjectType, Int } from "type-graphql";
 import { Comment, CommentsFilter,  CommentFilter, CreateCommentInput } from '../entities/Comment';
-import { Like, getRepository } from 'typeorm';
+import { Like, getRepository, getConnection } from 'typeorm';
 import {Book, BookInput, BookToComment} from "../entities/Book"
 // import { GraphQLUpload } from 'graphql-upload';
 import { createWriteStream } from 'fs';
@@ -9,7 +9,8 @@ import * as path from 'path';
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
-import {Project, ProjectToComment} from "../entities/Project";
+import { ProjectToComment, Project } from "../entities/Project";
+
 
 @Resolver(Comment)
 export class CommentResolver {
@@ -94,7 +95,7 @@ export class CommentResolver {
     @Mutation(returns => Comment)
     @UseMiddleware(isAuth)
     async deleteComment(
-        @Arg('id') id: string
+        @Arg('id') id: number
     ): Promise<Comment> {
         const commentRepository = getRepository(Comment);
         const comment = await commentRepository.findOne(id);
@@ -104,6 +105,7 @@ export class CommentResolver {
         await commentRepository.delete(id);
         return comment;
     }
+
 
     // @Mutation(returns => Boolean)
     // async createAuthorImage(@Arg('file', () => GraphQLUpload) file: Upload) {

@@ -3,6 +3,7 @@ mutation CreateProjectComment($text: String!, $id: Float!) {
     id
     text
     user {
+      id
       username
     }
     projects {

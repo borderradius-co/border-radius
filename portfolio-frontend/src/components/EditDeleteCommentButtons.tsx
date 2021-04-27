@@ -1,28 +1,35 @@
 import { AddIcon, DeleteIcon, EditIcon, ExternalLinkIcon, HamburgerIcon, RepeatIcon } from '@chakra-ui/icons';
-import { AlertDialog,Text, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, IconButton, Link, Menu, MenuButton,Circle, MenuItem, MenuList } from '@chakra-ui/react';
-import React from 'react'
+import { AlertDialog,Text,useEditableControls, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, Flex, IconButton, Link, Menu, MenuButton,Circle, MenuItem, MenuList } from '@chakra-ui/react';
+import React, { useState } from 'react'
 import NextLink from "next/link"
 import {MdMoreHoriz, MdDelete, MdModeEdit, MdMoreVert} from "react-icons/md"
-import { useDeleteProjectMutation, useMeQuery } from '../generated/graphql';
+import { useDeleteCommentMutation, useMeQuery } from '../generated/graphql';
+import {useRouter} from "next/router";
 
-interface EditDeleteProjectButtonsProps {
+
+interface EditDeleteCommentButtonsProps {
     id: number
     creatorId?: number
     name?: string   
     variant?: string
 }
 
-export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> = ({
+export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> = ({
     id,
     creatorId,
     name,
     variant='outline'
 }) => {
-    const [, deleteProject] = useDeleteProjectMutation()
+    const router = useRouter(); 
+    const [, deleteComment] = useDeleteCommentMutation()
     const [{data: meData}] = useMeQuery()
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
     const cancelRef = React.useRef()
+    const [toggle, setToggle] = useState(false)
+    const inEditMode = () => {
+        setToggle(!toggle)
+    }
     
     if (meData?.me?.id !== creatorId) {
         return null
@@ -46,11 +53,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
               />
              
               <MenuList>
-              <NextLink href="/project/edit/[id]" as={`/project/edit/${id}`} >
-                <MenuItem icon={<MdModeEdit />}>
+                <MenuItem onClick={inEditMode} icon={<MdModeEdit />}>
                   Edit 
                 </MenuItem>
-                </NextLink>
                 <MenuItem  color="red" icon={<MdDelete />} onClick={() => setIsOpen(true)}>
                   Delete 
                 </MenuItem>
@@ -66,12 +71,12 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
           <AlertDialogOverlay>
             <AlertDialogContent>
               <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                Delete {name}
+                Delete
               </AlertDialogHeader>
   
               <AlertDialogBody>
                       <Box>
-                      <Text>Are you sure you want to delete {name}?</Text>
+                      <Text>Are you sure you want to delete this comment?</Text>
 
                       </Box>
                 
@@ -93,7 +98,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 _hover={{bg:"none"}}
                 _focus={{bg:"none"}}
                 onClick={()=> {
-                    deleteProject({id})
+                    deleteComment({id})
+                    router.reload()
+                    
                 }} ml={3}>
                   Delete
                 </Button>

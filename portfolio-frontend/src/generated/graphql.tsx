@@ -137,7 +137,7 @@ export type MutationUpdateCommentArgs = {
 
 
 export type MutationDeleteCommentArgs = {
-  id: Scalars['String'];
+  id: Scalars['Float'];
 };
 
 
@@ -383,11 +383,24 @@ export type CreateProjectCommentMutation = (
     & Pick<Comment, 'id' | 'text'>
     & { user: (
       { __typename?: 'User' }
-      & Pick<User, 'username'>
+      & Pick<User, 'id' | 'username'>
     ), projects: Array<(
       { __typename?: 'Project' }
       & Pick<Project, 'id'>
     )> }
+  ) }
+);
+
+export type DeleteCommentMutationVariables = Exact<{
+  id: Scalars['Float'];
+}>;
+
+
+export type DeleteCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { deleteComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id'>
   ) }
 );
 
@@ -557,7 +570,7 @@ export type ProjectQuery = (
       & Pick<Comment, 'id' | 'text' | 'createdAt'>
       & { user: (
         { __typename?: 'User' }
-        & Pick<User, 'username'>
+        & Pick<User, 'id' | 'username'>
       ) }
     )> }
   )> }
@@ -698,6 +711,7 @@ export const CreateProjectCommentDocument = gql`
     id
     text
     user {
+      id
       username
     }
     projects {
@@ -709,6 +723,17 @@ export const CreateProjectCommentDocument = gql`
 
 export function useCreateProjectCommentMutation() {
   return Urql.useMutation<CreateProjectCommentMutation, CreateProjectCommentMutationVariables>(CreateProjectCommentDocument);
+};
+export const DeleteCommentDocument = gql`
+    mutation DeleteComment($id: Float!) {
+  deleteComment(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteCommentMutation() {
+  return Urql.useMutation<DeleteCommentMutation, DeleteCommentMutationVariables>(DeleteCommentDocument);
 };
 export const DeleteProjectDocument = gql`
     mutation DeleteProject($id: Int!) {
@@ -863,6 +888,7 @@ export const ProjectDocument = gql`
       text
       createdAt
       user {
+        id
         username
       }
     }
