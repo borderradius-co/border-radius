@@ -26,10 +26,7 @@ export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> =
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
     const cancelRef = React.useRef()
-    const [toggle, setToggle] = useState(false)
-    const inEditMode = () => {
-        setToggle(!toggle)
-    }
+
     
     if (meData?.me?.id !== creatorId) {
         return null
@@ -39,30 +36,19 @@ export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> =
  
         return (
             <>
-            <Menu>
-              
-              <MenuButton
-                as={IconButton}
-                aria-label="Options"
-                icon={<MdMoreVert />}
-                _hover={{bg:"#ffffff"}}
-                _focus={{bg:"#ffffff"}}
-                _active={{bg:"#ffffff"}}
-                variant={variant === 'outline' ? 'outline' : 'none'}
-                borderColor="#e1e1e1"
-              />
+            <Button
              
-              <MenuList>
-                <MenuItem onClick={inEditMode} icon={<MdModeEdit />}>
-                  Edit 
-                </MenuItem>
-                <MenuItem  color="red" icon={<MdDelete />} onClick={() => setIsOpen(true)}>
-                  Delete 
-                </MenuItem>
-             
-              </MenuList>
-            </Menu>
-            
+            aria-label="Delete Comment" 
+            icon={<MdDelete/>}
+            fontSize="12px"
+            color="red.600"
+            _hover={{bg:'none'}}
+            _focus={{bg:'none'}}
+            _active={{bg:'none'}}
+            variant={variant === 'link' ? 'link' : 'none'}
+            borderColor="#e1e1e1"
+            onClick={() => setIsOpen(true)}
+            >Delete</Button>
         <AlertDialog
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}

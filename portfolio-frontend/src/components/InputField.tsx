@@ -24,7 +24,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
             <FormControl isInvalid={!!error}>
                 
                 <FormLabel htmlFor={field.name}>{label}</FormLabel>
-                <InputOrTextarea {...field} {...props} id={field.name} />
+                <InputOrTextarea maxHeight="200px" {...field} {...props} id={field.name} />
                 {error? <FormErrorMessage>{error}</FormErrorMessage> : null}
               </FormControl>
         );

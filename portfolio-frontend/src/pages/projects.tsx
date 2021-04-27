@@ -125,7 +125,7 @@ const ProjectsGrid = () => {
                                     size="xs" bg="blue.900"
                                      color="white" 
                                      marginRight="2"/>
-                                    <Divider width="5%" marginRight="2"></Divider>
+                                    <Divider width="5%" marginRight="2" />
 
                                     <Text marginRight="4" fontSize="16px" textColor="gray.600" fontWeight="light">{project.creator.username}</Text> 
                                 

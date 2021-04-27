@@ -36,17 +36,23 @@ const CreateModal: React.FC<{}> = ({}) => {
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent height="2xl">
-            <ModalHeader  fontWeight="thin">
-            <Avatar marginRight="4" size="sm" src="./images/border-radius.svg"></Avatar>
-
-
-                Border Radius
+            
+            <ModalHeader fontWeight="thin">
                 
-                </ModalHeader>
+            <Avatar marginRight="4" size="sm" src="./images/border-radius.svg"></Avatar>
+                Border Radius
+            </ModalHeader>
 
             <ModalCloseButton />
             <ModalBody pb={6}>
-                <Wrapper variant="small">
+
+        
+                <Flex flexDirection="row"  height="100%">
+                <Flex align="center"  height="xl" width="40%"  >
+                    <Image src="./images/create.svg"></Image>
+                    <Text color="white">Hello</Text>
+                </Flex>
+                <Box width="100%" maxWidth="400px" marginX="auto">
                 <Formik 
                 initialValues={{name: '', text: ''}} 
                 onSubmit={async (values) => {
@@ -60,6 +66,8 @@ const CreateModal: React.FC<{}> = ({}) => {
         >
             {({isSubmitting}) => (
                 <Form>
+                    <Heading fontWeight="medium" marginBottom={4} size="lg" >Create New Project</Heading>
+                    <Divider marginBottom={8}></Divider>
                     <InputField 
                     name="name"
                     placeholder="name of this project"
@@ -76,19 +84,24 @@ const CreateModal: React.FC<{}> = ({}) => {
                     />
                     </Box>
 
-                    <ModalFooter marginTop={8} padding={0}>
+                    <ModalFooter marginTop={16} padding={0}>
                     <Button color="gray.500" variant="ghost" onClick={onClose} marginRight={4}>Cancel</Button>
                     <Button
                     type="submit"
                     variant="outline"
-                    color="#8D036F"
-                    borderColor="#8D036F"
+                    _hover={{bg:"green.100"}}
+                    color="green.500"
+                    fontWeight="hairline" 
+
                     isLoading={isSubmitting}>Create</Button>
                     </ModalFooter> 
                 </Form>
             )}
         </Formik>
-            </Wrapper>
+        </Box>
+
+                </Flex>
+                
             </ModalBody>
             </ModalContent>
                 

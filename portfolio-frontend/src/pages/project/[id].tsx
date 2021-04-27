@@ -1,6 +1,6 @@
 import { Heading, Text,Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Avatar, Button, Divider, HStack, IconButton, VStack } from '@chakra-ui/react';
 import { withUrqlClient } from 'next-urql';
-import React from 'react'
+import React, {useState} from 'react'
 import { EditDeleteCommentButtons } from '../../components/EditDeleteCommentButtons';
 import { Layout } from '../../components/Layout';
 import { createUrqlClient } from '../../utils/createUrqlClient';
@@ -18,7 +18,6 @@ export const Project: React.FC<{}> = ({}) => {
     const [, createComment] = useCreateProjectCommentMutation();
     const [{data, fetching, error}] = useGetProjectFromUrl()
     const [{data: meData, fetching: meFetching}] = useMeQuery()
-
     if (fetching) {
         return (
             <Layout> 
@@ -68,7 +67,12 @@ export const Project: React.FC<{}> = ({}) => {
                     <Heading size="md">Comments</Heading>
                     <Divider width="100%" marginTop="4" marginBottom="4"></Divider>
                     {data.project.comments?.map((comment) => (
-                    <HStack align="self-start" marginBottom="8" width="100%">
+                    <HStack 
+                    align="self-start" 
+                    marginBottom="8" 
+                    width="100%" 
+                   
+                    >
                         <HStack width="10%" spacing="2">
                
                         <Avatar  size="sm" src="https://bit.ly/code-beast"  bg="blue.800" color="white"/>
@@ -80,24 +84,47 @@ export const Project: React.FC<{}> = ({}) => {
                         <VStack width="100%" spacing="1" align="start">
                         
                             
-                            <Flex width="100%" align="center" justify="space-between" >
+                            <Flex 
+                            width="100%" 
+                            align="center" 
+                            justify="space-between" >
                                 
-                            <Text textColor="gray.600"  fontWeight="semibold" >{comment.user.username}</Text>
+                                <Text 
+                                textColor="gray.600"  
+                                fontWeight="semibold"
+                                >{comment.user.username}
+                                </Text>
                          
                             </Flex>
                         
-                            <Text fontWeight="hairline" >{comment.text}</Text>
-                            <Text fontSize="xx-small">{Date(comment.createdAt)}</Text>
+                            <Text 
+                            fontWeight="hairline" 
+                            >{comment.text}
+                            </Text>
+
+                            <Flex align="center" width="100%" justify="space-between">
+                            <Text 
+                            fontSize="xx-small">
+                                {Date(comment.createdAt)}
+                            </Text>
+
+                            <EditDeleteCommentButtons 
+                            id={comment.id} 
+                            creatorId={comment.user.id}  
+                            variant="link"
+                            />
+                            </Flex>
+                           
+                            
+                           
 
                        
                         </VStack>
-                        <EditDeleteCommentButtons 
-                        id={comment.id} 
-                        creatorId={comment.user.id}  
-                        variant='none'
-                        />
+                        
+                        
                    
                     </HStack>
+                    
                         
                     ))}
                 </Box>

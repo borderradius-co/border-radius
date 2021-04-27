@@ -16,6 +16,7 @@ export const Wrapper:  React.FC<WrapperProps> = ({ children, variant='regular' }
       maxWidth={variant === 'regular' ? "800px" : "400px"}
       width="100%"
       marginX="auto"
+      padding="16px"
     >
       {children}
     </Box>
