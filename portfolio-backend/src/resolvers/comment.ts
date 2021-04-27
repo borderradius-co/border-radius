@@ -9,6 +9,7 @@ import * as path from 'path';
 import { isAuth } from "../middleware/isAuth";
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
+import {Project, ProjectToComment} from "../entities/Project";
 
 @Resolver(Comment)
 export class CommentResolver {
@@ -55,6 +56,21 @@ export class CommentResolver {
         comment.text = input.text;
         comment.userId =req.session.userId;
         comment.books = Promise.resolve(books);
+        await comment.save();
+        return comment;
+    }
+
+    @Mutation(returns => Comment)
+    @UseMiddleware(isAuth)
+    async createProjectComment(
+        @Arg('comment') input: CreateCommentInput,
+        @Arg('projects', type => [ProjectToComment]) projects: Project[],
+        @Ctx() {req}:MyContext
+    ): Promise<CreateCommentInput> {
+      const comment = new Comment();
+        comment.text = input.text;
+        comment.userId =req.session.userId;
+        comment.projects = Promise.resolve(projects);
         await comment.save();
         return comment;
     }

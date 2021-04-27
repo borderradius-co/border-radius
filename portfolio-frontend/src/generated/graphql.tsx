@@ -34,8 +34,8 @@ export type Comment = {
   userId: Scalars['Float'];
   user: User;
   books: Array<Book>;
+  projects: Array<Project>;
   createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
 };
 
 export type CreateBookInput = {
@@ -64,6 +64,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   createComment: Comment;
+  createProjectComment: Comment;
   updateComment: Comment;
   deleteComment: Comment;
   createBook: Book;
@@ -123,6 +124,12 @@ export type MutationCreateCommentArgs = {
 };
 
 
+export type MutationCreateProjectCommentArgs = {
+  projects: Array<ProjectToComment>;
+  comment: CreateCommentInput;
+};
+
+
 export type MutationUpdateCommentArgs = {
   comment: CreateCommentInput;
   id: Scalars['String'];
@@ -170,6 +177,7 @@ export type Project = {
   name: Scalars['String'];
   text: Scalars['String'];
   points: Scalars['Float'];
+  comments: Array<Comment>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   textSnippet: Scalars['String'];
@@ -178,6 +186,10 @@ export type Project = {
 export type ProjectInput = {
   name: Scalars['String'];
   text: Scalars['String'];
+};
+
+export type ProjectToComment = {
+  id: Scalars['Float'];
 };
 
 export type Query = {
@@ -358,6 +370,27 @@ export type CreateProjectMutation = (
   ) }
 );
 
+export type CreateProjectCommentMutationVariables = Exact<{
+  text: Scalars['String'];
+  id: Scalars['Float'];
+}>;
+
+
+export type CreateProjectCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createProjectComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'text'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'username'>
+    ), projects: Array<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id'>
+    )> }
+  ) }
+);
+
 export type DeleteProjectMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -519,7 +552,14 @@ export type ProjectQuery = (
     & { creator: (
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username'>
-    ) }
+    ), comments: Array<(
+      { __typename?: 'Comment' }
+      & Pick<Comment, 'id' | 'text' | 'createdAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'username'>
+      ) }
+    )> }
   )> }
 );
 
@@ -651,6 +691,24 @@ export const CreateProjectDocument = gql`
 
 export function useCreateProjectMutation() {
   return Urql.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument);
+};
+export const CreateProjectCommentDocument = gql`
+    mutation CreateProjectComment($text: String!, $id: Float!) {
+  createProjectComment(comment: {text: $text}, projects: {id: $id}) {
+    id
+    text
+    user {
+      username
+    }
+    projects {
+      id
+    }
+  }
+}
+    `;
+
+export function useCreateProjectCommentMutation() {
+  return Urql.useMutation<CreateProjectCommentMutation, CreateProjectCommentMutationVariables>(CreateProjectCommentDocument);
 };
 export const DeleteProjectDocument = gql`
     mutation DeleteProject($id: Int!) {
@@ -799,6 +857,14 @@ export const ProjectDocument = gql`
     creator {
       id
       username
+    }
+    comments {
+      id
+      text
+      createdAt
+      user {
+        username
+      }
     }
   }
 }

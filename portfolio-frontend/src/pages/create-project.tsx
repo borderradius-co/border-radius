@@ -46,7 +46,14 @@ const CreateProject: React.FC<{}> = ({}) => {
                     />
                     </Box>
 
-                    <Button marginTop={4} type="submit" colorScheme="teal" isLoading={isSubmitting}>Create Project</Button>
+                    <Button 
+                    marginTop={4} 
+                    type="submit" 
+                    colorScheme="teal" 
+                    isLoading={isSubmitting}
+                    >
+                        Create Project
+                    </Button>
                 </Form>
             )}
         </Formik>

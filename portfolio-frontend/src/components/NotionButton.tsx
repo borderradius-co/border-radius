@@ -12,7 +12,10 @@ export const NotionButton: React.FC<NotionButtonProps> = ({}) => {
         return (
             <Flex 
             align="center" 
-            border="1px" 
+            border="1px"
+            _hover={{bg:"#ffffff"}}
+            _focus={{bg:"#ffffff"}}
+            _active={{bg:"#ffffff"}} 
             borderColor="#E2E2E2" 
             borderRadius="2.5px" 
             boxSizing="border-box" 

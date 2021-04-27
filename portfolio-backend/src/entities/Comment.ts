@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Entity,CreateDateColumn,PrimaryGeneratedColumn, Column, BaseEntity, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { ObjectType, Field, ID, InputType, ArgsType, Int } from 'type-graphql';
 import { Book } from './Book';
 import { User } from './User';
+import { Project } from './Project';
 
 @Entity()
 @ObjectType()
@@ -27,6 +28,14 @@ export class Comment extends BaseEntity {
      @ManyToMany(type => Book, book => book.comments, { lazy: true })
      @Field(type => [Book])
      books: Promise<Book[]>
+
+     @ManyToMany(type => Project, project => project.comments, { lazy: true })
+     @Field(type => [Project])
+     projects: Promise<Project[]>
+
+     @Field(() => String)
+     @CreateDateColumn()
+     createdAt: Date;
 }
 
 @InputType()

@@ -7,8 +7,8 @@ import { useDeleteProjectMutation, useMeQuery } from '../generated/graphql';
 
 interface EditDeleteProjectButtonsProps {
     id: number
-    creatorId: number
-    name: string
+    creatorId?: number
+    name?: string
 
 }
 
@@ -36,9 +36,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 as={IconButton}
                 aria-label="Options"
                 icon={<MdMoreVert />}
-                _hover={{bg:"none"}}
-                _focus={{bg:"none"}}
-                _active={{bg:"none"}}
+                _hover={{bg:"#ffffff"}}
+                _focus={{bg:"#ffffff"}}
+                _active={{bg:"#ffffff"}}
                 variant="outline"
                 borderColor="#e1e1e1"
               />
@@ -68,11 +68,10 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
               </AlertDialogHeader>
   
               <AlertDialogBody>
-                  <Flex>
-                      <Text>Are you sure you want to delete</Text>
-                      <Text marginLeft="1" fontWeight="bold" >{name}</Text>
-                      <Text>?</Text>
-                  </Flex>
+                      <Box>
+                      <Text>Are you sure you want to delete {name}?</Text>
+
+                      </Box>
                 
               </AlertDialogBody>
   
@@ -84,7 +83,7 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 _focus={{bg:"none"}}
                 variant="link"
                 >
-                  Cancel
+                  No
                 </Button>
                 <Button 
                 variant="link"

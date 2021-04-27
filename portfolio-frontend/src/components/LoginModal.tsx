@@ -1,6 +1,6 @@
 import React from 'react';
-import { Field, Form, Formik} from 'formik';
-import { Box, Image,Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast, Avatar} from '@chakra-ui/react';
+import {  Form, Formik} from 'formik';
+import { Box, Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, Avatar} from '@chakra-ui/react';
 import Wrapper from "./Wrapper";
 import InputField from './InputField';
 import { useLoginMutation, useMeQuery } from '../generated/graphql';
@@ -22,7 +22,6 @@ const LoginModal: React.FC<{}> = ({}) => {
     const [, login] = useLoginMutation();
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [{data, fetching}] = useMeQuery()
-    const toast = useToast()
 
     return (
         <>
