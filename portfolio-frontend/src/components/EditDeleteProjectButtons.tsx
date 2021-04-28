@@ -27,9 +27,6 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
     if (meData?.me?.id !== creatorId) {
         return null
     }
-
-
- 
         return (
             <>
             <Menu>
@@ -38,11 +35,11 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 as={IconButton}
                 aria-label="Options"
                 icon={<MdMoreVert />}
-                _hover={{bg:"#ffffff"}}
-                _focus={{bg:"#ffffff"}}
-                _active={{bg:"#ffffff"}}
+                _hover={{bg:"#ffdcdc", borderRadius:'50'}}
+                _focus={{bg:"none"}}
+                _active={{bg:"#ffdcdc", borderRadius:'50'}}
                 variant={variant === 'outline' ? 'outline' : 'none'}
-                borderColor="#e1e1e1"
+                borderColor='transparent'
               />
              
               <MenuList>

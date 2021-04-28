@@ -98,9 +98,9 @@ const ProjectsGrid = () => {
                         borderRadius="5" 
                         direction="column" 
                         justifyContent="space-between"
-                        _hover={{bg:"#F4F4F4"}}
+                        _hover={{border:"4px", borderColor:"#8D036F" }}
                         >
-
+                        
                             <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} name={project.name} />
 
                             <NextLink href="/project/id" as={`/project/${project.id}`} >
@@ -114,9 +114,9 @@ const ProjectsGrid = () => {
                                     </Link>  
 
                                 </NextLink>
-                                <Flex align="center" >
-                                    <Image marginTop="20px" maxH="200px" width="100%" src='./images/team.svg' />
-                                </Flex>
+                                <Box align="center" >
+                                    <Image marginTop="20px" minHeight="240px" maxHeight="240px" objectFit="cover" width="100%" src='./images/typer.jpg' />
+                                </Box>
                                 <Flex marginBottom="4" marginTop="4" align="center">
 
                                     <Avatar   

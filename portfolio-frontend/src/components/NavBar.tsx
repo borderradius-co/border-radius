@@ -55,19 +55,26 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             </>
         }
         return (
+          
             <Flex zIndex={1} position="sticky" top={0}  p={4} bg="white">
-                
-                <Flex flex={1} m="auto" align="center" maxW={800}>
+                  <Box width="100%">
+                  <Flex flex={1} m="auto" align="center"  maxWidth="800px">
                 <NextLink href="/">
                     <Avatar marginRight="4" size="sm" src ="./images/border-radius.svg"/>
                 </NextLink>
                 
                     
                 <Home/>
-                {body}    
+                {body}
+                   
                 </Flex>
+                <Divider></Divider> 
+
+
+                </Box> 
+               
             </Flex>
-            
+           
         );
 }
 

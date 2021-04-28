@@ -1,8 +1,8 @@
 import React from 'react'
 import { Form, Formik} from 'formik'
-import { Box, Button, Text,Divider, Flex, Heading, Link, useToast} from '@chakra-ui/react';
 import Wrapper from "../components/Wrapper"
 import InputField from '../components/InputField';
+import { Box, Button, Text,Divider, Flex, Heading, Link, useToast} from '@chakra-ui/react';
 import { useLoginMutation, useMeQuery } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
@@ -31,7 +31,9 @@ const Login: React.FC<{}> = ({}) => {
                 setErrors (toErrorMap(response.data.login.errors));
             } else if(response.data?.login.user) {
                 if (typeof router.query.next === "string") {
-                    router.push(router.query.next)
+                    // There is a bug here when attempting to push to project/id
+                    // router.push(router.query.next)
+                    router.push("/projects")
                 } else {
                     router.push("/projects")
                 }

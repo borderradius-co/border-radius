@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Field, Form, Formik} from 'formik';
-import { Box, Image,Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast, Avatar} from '@chakra-ui/react';
+import { Box,IconButton, Image,Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, useToast, Avatar} from '@chakra-ui/react';
 import Wrapper from "./Wrapper";
 import InputField from './InputField';
 import { useCreateProjectMutation, useMeQuery } from '../generated/graphql';
@@ -8,6 +8,8 @@ import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router";
 import NextLink from "next/link";
 import {MdAdd} from "react-icons/md";
+import {MdStayPrimaryPortrait, MdStayPrimaryLandscape} from "react-icons/md"
+
 
 interface LoginOptionModalProps {
 }
@@ -19,6 +21,11 @@ const CreateModal: React.FC<{}> = ({}) => {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const [{data, fetching}] = useMeQuery()
     const toast = useToast()
+    const [toggle, setToggle] = useState(false)
+    const toggleIt = () => {
+        setToggle(!toggle)
+    }  
+    const flexValue = ['row', 'column']
 
     return (
         <>
@@ -35,7 +42,7 @@ const CreateModal: React.FC<{}> = ({}) => {
         </Button>
         <Modal size="6xl" blockScrollOnMount={true} isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
-            <ModalContent height="2xl">
+            <ModalContent height="75%">
             
             <ModalHeader fontWeight="thin">
                 
@@ -45,13 +52,9 @@ const CreateModal: React.FC<{}> = ({}) => {
 
             <ModalCloseButton />
             <ModalBody pb={6}>
-
-        
-                <Flex flexDirection="row"  height="100%">
-                <Flex align="center"  height="xl" width="40%"  >
-                    <Image src="./images/create.svg"></Image>
-                    <Text color="white">Hello</Text>
-                </Flex>
+      
+         
+                <Flex flexDirection="row"  align="center" height="100%">
                 <Box width="100%" maxWidth="400px" marginX="auto">
                 <Formik 
                 initialValues={{name: '', text: ''}} 
