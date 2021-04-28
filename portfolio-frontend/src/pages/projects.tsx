@@ -115,7 +115,7 @@ const ProjectsGrid = () => {
 
                                 </NextLink>
                                 <Box align="center" >
-                                    <Image marginTop="20px" minHeight="240px" maxHeight="240px" objectFit="cover" width="100%" src='./images/typer.jpg' />
+                                    <Image marginTop="20px" minHeight="240px" maxHeight="240px" objectFit="cover" width="100%" src={`./images/${project.name}.jpg`} />
                                 </Box>
                                 <Flex marginBottom="4" marginTop="4" align="center">
 
