@@ -22,6 +22,7 @@ import {  CommentResolver } from "./resolvers/comment";
 import { BookResolver } from "./resolvers/book";
 import { createBookLoader } from "./utils/CreateBookLoader";
 import {Comment} from "./entities/Comment"
+import { ProfilePictureResolver } from "./resolvers/ProfilePicture";
 
 
 
@@ -81,7 +82,7 @@ const main = async () => {
 
     const apolloserver = new ApolloServer({
         schema: await buildSchema({
-            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver],
+            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver, ProfilePictureResolver],
             validate: false
         }),
         context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(), createBookLoader: createBookLoader()})

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Form, Formik} from 'formik'
-import { Box,Text,Avatar, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
+import { Box,Text,Avatar, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast, Input} from '@chakra-ui/react';
 import Wrapper from "./Wrapper"
 import InputField from './InputField';
 import { useRegisterMutation } from '../generated/graphql';
@@ -8,6 +8,7 @@ import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
 import { MdFingerprint } from "react-icons/md";
 import NextLink from "next/link"
+import { Storage } from 'aws-amplify';
 
 interface RegisterOptionModalProps {
 
@@ -20,6 +21,10 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
     const [, register] = useRegisterMutation();
     const { isOpen, onClose, onOpen } = useDisclosure()
     const toast = useToast()
+   
+
+
+
     return (
         <>
         <Button 
@@ -41,7 +46,16 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                 <ModalBody pb={6}>
                 <Wrapper variant={'small'}>
         <Formik initialValues={{email: '',username: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await register({options: values});
+            const [imageValue, setImageValue] = useState('')
+
+            async function onChange(e: any) {
+                    if(!e.target.files[0]) return 
+                    const file = e.target.files[0]
+                    setImageValue(file.name)
+                    await Storage.put(file.name, file)
+                }
+            const response = await register({options: values, image:imageValue});
+     
             if (response.data?.register.errors) {
                
                 setErrors (toErrorMap(response.data.register.errors));
@@ -76,6 +90,7 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                     type="password"
                     />
                     </Box>
+                    <input type="file" onChange={onChange}/>
                     <Divider marginTop={8} marginBottom={4}></Divider>
 
                     <Flex marginTop={4}>

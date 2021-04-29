@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Form, Formik} from 'formik'
-import { Box, Button, Text, Link,Divider, Flex, Heading, useToast} from '@chakra-ui/react';
+import { Box, Button, Text, Link,Divider, Flex, Heading, useToast, Input} from '@chakra-ui/react';
 import Wrapper from "../components/Wrapper"
 import InputField from '../components/InputField';
 import { useRegisterMutation } from '../generated/graphql';
@@ -10,21 +10,35 @@ import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { Layout } from '../components/Layout';
 import NextLink from "next/link"
+import { Storage } from 'aws-amplify';
+
 
 interface registerProps {
+    
 
 }
 
 
 
 const Register: React.FC<registerProps> = ({}) => {
+    const [imageValue, setImageValue] = useState('')
+
+    async function handleChange(e:any) {
+        if(!e.target.files[0]) return 
+        const file = e.target.files[0]
+        setImageValue(file.name)
+        console.log(imageValue)
+        await Storage.put(file.name, file)    
+    }
     const toast = useToast( )
     const router = useRouter(); 
     const [, register] = useRegisterMutation();
     return (
         <Layout>
         <Formik initialValues={{email: '',username: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await register({options: values});
+               
+            const response = await register({options: values, image: imageValue});
+            console.log(imageValue)
             if (response.data?.register.errors) {
                
                 setErrors (toErrorMap(response.data.register.errors));
@@ -58,12 +72,15 @@ const Register: React.FC<registerProps> = ({}) => {
                     type="password"
                     />
                     </Box>
+                    <input type="file" onChange={handleChange}  />
+
                     <Flex marginTop={4}>
                         <Text>Already have an account?</Text>
                         <NextLink href="/login">
                             <Link color="green.200" marginLeft="2">Sign in instead</Link>
                         </NextLink>
-                    </Flex>  
+                    </Flex>
+                      
                     <Flex align="center" padding="0" marginTop="4">
                         <NextLink href="/">
                         <Button marginLeft="auto"  variant="ghost" marginRight={4}>Cancel</Button>

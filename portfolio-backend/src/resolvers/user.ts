@@ -10,6 +10,9 @@ import {v4} from "uuid"
 import { FORGET_PASSWORD_PREFIX } from "../constants";
 import { getConnection } from "typeorm";
 
+
+
+
 @ObjectType()
 class FieldError {
     @Field()
@@ -145,6 +148,7 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async register(
         @Arg('options', () => UsernamePasswordInput) options: UsernamePasswordInput,
+        @Arg('image', ()=> String) image: string,
         @Ctx() {req}:MyContext
     ): Promise<UserResponse> {
         const errors = validateRegister(options);
@@ -163,6 +167,7 @@ export class UserResolver {
                 username: options.username,
                 email: options.email,
                 password: hashedPassword,
+                image: image
             }
         
         )

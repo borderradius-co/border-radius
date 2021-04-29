@@ -8,12 +8,14 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^1.0.7",
     "@chakra-ui/icons": "^1.0.0",
     "@chakra-ui/react": "^1.5.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/roboto": "^4.2.3",
     "@urql/exchange-graphcache": "^4.0.0",
+    "aws-amplify": "^3.3.27",
     "formik": "^2.2.6",
     "framer-motion": "^4",
     "graphql": "^15.5.0",
@@ -23,6 +25,7 @@
     "next-urql": "^3.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.2.0",
     "react-is": "^17.0.2",
     "urql": "^2.0.2",
     "wonka": "^4.0.15"

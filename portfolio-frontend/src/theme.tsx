@@ -16,6 +16,7 @@ const theme = extendTheme({
   colors: {
     black: '#16161D',
     divar: '#E8D6CB',
+    red: '#750909'
   },
   fonts,
   breakpoints,

@@ -12,6 +12,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type Book = {
@@ -70,6 +72,7 @@ export type Mutation = {
   createBook: Book;
   updateBook: Book;
   deleteBook: Book;
+  addProfilePicture: Scalars['Boolean'];
 };
 
 
@@ -108,6 +111,7 @@ export type MutationForgotPasswordArgs = {
 
 
 export type MutationRegisterArgs = {
+  image: Scalars['String'];
   options: UsernamePasswordInput;
 };
 
@@ -154,6 +158,11 @@ export type MutationUpdateBookArgs = {
 
 export type MutationDeleteBookArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationAddProfilePictureArgs = {
+  image: Scalars['Upload'];
 };
 
 export type PaginatedBooks = {
@@ -249,10 +258,12 @@ export type QueryBookArgs = {
   slug?: Maybe<Scalars['String']>;
 };
 
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
   username: Scalars['String'];
+  image: Scalars['String'];
   email: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -303,6 +314,16 @@ export type ProjectSnippetFragment = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username' | 'createdAt'>
   ) }
+);
+
+export type AddProfilePictureMutationVariables = Exact<{
+  image: Scalars['Upload'];
+}>;
+
+
+export type AddProfilePictureMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addProfilePicture'>
 );
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -448,6 +469,7 @@ export type LogoutMutation = (
 
 export type RegisterMutationVariables = Exact<{
   options: UsernamePasswordInput;
+  image: Scalars['String'];
 }>;
 
 
@@ -643,6 +665,15 @@ export const ProjectSnippetFragmentDoc = gql`
   }
 }
     `;
+export const AddProfilePictureDocument = gql`
+    mutation addProfilePicture($image: Upload!) {
+  addProfilePicture(image: $image)
+}
+    `;
+
+export function useAddProfilePictureMutation() {
+  return Urql.useMutation<AddProfilePictureMutation, AddProfilePictureMutationVariables>(AddProfilePictureDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -774,8 +805,8 @@ export function useLogoutMutation() {
   return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
-    mutation Register($options: UsernamePasswordInput!) {
-  register(options: $options) {
+    mutation Register($options: UsernamePasswordInput!, $image: String!) {
+  register(options: $options, image: $image) {
     ...DefaultUserResponse
   }
 }
