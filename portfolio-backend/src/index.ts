@@ -37,6 +37,7 @@ const main = async () => {
         migrations: [path.join(__dirname, "./migrations/*") ],
         entities: [Project, User, Updoot, Book, Comment]
     });
+    
     await conn.runMigrations()
     //rerun
     // await Book.delete({})
@@ -70,7 +71,7 @@ const main = async () => {
             httpOnly: true,
             sameSite: "lax", //csrf
             secure: __prod__, //cookie only works in https
-            domain: __prod__ ? ".elementzero.com" : undefined,
+            domain: __prod__ ? ".border-radius.me" : undefined,
         },
         saveUninitialized: false,
         //secret should be in an environment variable file
