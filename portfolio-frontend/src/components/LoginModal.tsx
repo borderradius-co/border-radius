@@ -2,7 +2,7 @@ import React from 'react';
 import {  Form, Formik} from 'formik';
 import { Box, Button, Flex, Link, Modal, ModalContent, ModalOverlay, useDisclosure,ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Text, Heading, Divider, Avatar} from '@chakra-ui/react';
 import Wrapper from "./Wrapper";
-import InputField from './InputField';
+import {InputField} from './InputField';
 import { useLoginMutation, useMeQuery } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router";

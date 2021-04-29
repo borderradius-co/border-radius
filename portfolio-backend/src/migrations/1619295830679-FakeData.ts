@@ -1,8 +1,8 @@
-// import {MigrationInterface, QueryRunner} from "typeorm";
+import {MigrationInterface, QueryRunner} from "typeorm";
 
-// export class FakeData1619295830679 implements MigrationInterface {
+export class FakeData1619295830679 implements MigrationInterface {
 
-//     public async up(_: QueryRunner): Promise<void> {
+    public async up(_: QueryRunner): Promise<void> {
         // await queryRunner.query(`
         // insert into book (title, "createdAt") values ('Howe-Rogahn', '2020-08-24T10:25:18Z');
         // insert into book (title, "createdAt") values ('Ortiz-Kihn', '2021-01-29T14:42:25Z');
@@ -1005,9 +1005,9 @@
         // insert into book (title, "createdAt") values ('Collier, Blanda and Gutmann', '2020-04-20T13:23:22Z');
         // insert into book (title, "createdAt") values ('Ruecker and Sons', '2020-11-05T13:25:47Z');    
         // `)
-//     }
+    }
 
-//     public async down(_: QueryRunner): Promise<void> {
-//     }
+    public async down(_: QueryRunner): Promise<void> {
+    }
 
-// }
+}

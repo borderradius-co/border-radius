@@ -14,6 +14,7 @@ interface EditDeleteCommentButtonsProps {
     variant?: string
 }
 
+
 export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> = ({
     id,
     creatorId,
@@ -25,7 +26,7 @@ export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> =
     const [{data: meData}] = useMeQuery()
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
-    const cancelRef = React.useRef()
+    const cancelRef = React.useRef<HTMLButtonElement>(null);
 
     
     if (meData?.me?.id !== creatorId) {

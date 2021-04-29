@@ -2,7 +2,7 @@ import React from 'react'
 import { Form, Formik} from 'formik'
 import { Box,Text,Avatar, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
 import Wrapper from "./Wrapper"
-import InputField from './InputField';
+import {InputField} from './InputField';
 import { useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"

@@ -6,14 +6,14 @@ import { Project, ProjectSnippetFragment, useVoteMutation } from '../generated/g
 
 interface UpdootSectionProps {
     project: ProjectSnippetFragment
-    direction?: ResponsiveValue<FlexDirection> | undefined
+    // direction?: ResponsiveValue<FlexDirection> | undefined
 }
 
-export const UpdootSection: React.FC<UpdootSectionProps> = ({project, direction='column'}) => {
+export const UpdootSection: React.FC<UpdootSectionProps> = ({project}) => {
     const [loadingState, setLoadingState] = useState<'updoot-loading' | 'downdoot-loading' | 'not-loading'>('not-loading')
     const [, vote] = useVoteMutation()
         return (
-            <Flex direction={direction} align="center" justify="center" marginTop="4">
+            <Flex direction="row" align="center" justify="center" marginTop="4">
                 <IconButton 
                 colorScheme={project.voteStatus === 1 ? "green" : undefined} 
                 variant="link"

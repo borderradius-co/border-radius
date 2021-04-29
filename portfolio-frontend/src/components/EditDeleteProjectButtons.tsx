@@ -12,6 +12,8 @@ interface EditDeleteProjectButtonsProps {
     variant?: string
 }
 
+
+
 export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> = ({
     id,
     creatorId,
@@ -22,7 +24,7 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
     const [{data: meData}] = useMeQuery()
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
-    const cancelRef = React.useRef()
+    const cancelRef = React.useRef<HTMLButtonElement>(null);
     
     if (meData?.me?.id !== creatorId) {
         return null

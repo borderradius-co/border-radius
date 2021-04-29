@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import InputField from '../../components/InputField';
+import {InputField} from '../../components/InputField';
 import Wrapper from '../../components/Wrapper';
 import { toErrorMap } from '../../utils/toErrorMap';
 import { useChangePasswordMutation } from "../../generated/graphql";
@@ -11,7 +11,7 @@ import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import NextLink from "next/link"
 
-const ChangePassword: NextPage< {token: string} > = () => {
+const ChangePassword: NextPage< {token: string} > | any = () => {
         const router = useRouter();
         // console.log(router.query)
         const [, changePassword] = useChangePasswordMutation();

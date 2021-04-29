@@ -2,7 +2,7 @@ import {useCreateBookMutation, useCreateCommentMutation} from "../../generated/g
 import { useIsAuth } from '../../utils/useIsAuth';
 import { Form, Formik } from 'formik';
 import router from 'next/router';
-import InputField from '../../components/InputField';
+import {InputField} from '../../components/InputField';
 import {useGetBookFromUrl} from "../../utils/useGetBookFromUrl"
 import { withUrqlClient } from "next-urql";
 import React from "react";
@@ -72,7 +72,7 @@ export const Book: React.FC<{}> = ({}) => {
                             </Flex>
 
                             <Text fontWeight="hairline" >{comment.text}</Text>
-                            <Text fontSize="xx-small">{Date(comment.createdAt)}</Text>
+                            {/* <Text fontSize="xx-small">{Date(comment.createdAt)}</Text> */}
 
                        
                         </VStack>

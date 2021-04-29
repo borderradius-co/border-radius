@@ -4,7 +4,7 @@ import { withUrqlClient } from 'next-urql';
 import router from 'next/router';
 import {useRouter} from "next/router"
 import React, { useEffect } from 'react'
-import InputField from '../components/InputField';
+import {InputField} from '../components/InputField';
 import { Layout } from '../components/Layout';
 import Wrapper from '../components/Wrapper';
 import {useCreateProjectMutation} from "../generated/graphql"

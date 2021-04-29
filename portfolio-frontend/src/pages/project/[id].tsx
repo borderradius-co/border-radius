@@ -10,7 +10,7 @@ import { useCreateProjectCommentMutation, useMeQuery } from '../../generated/gra
 import { useIsAuth } from '../../utils/useIsAuth';
 import { Formik, Form } from 'formik';
 import router from 'next/router';
-import InputField from '../../components/InputField';
+import {InputField} from '../../components/InputField';
 import {MdMoreVert} from "react-icons/md"
 
 export const Project: React.FC<{}> = ({}) => {
@@ -103,10 +103,10 @@ export const Project: React.FC<{}> = ({}) => {
                             </Text>
 
                             <Flex align="center" width="100%" justify="space-between">
-                            <Text 
+                            {/* <Text 
                             fontSize="xx-small">
-                                {Date(comment.createdAt)}
-                            </Text>
+                                {Date(comment.createdAt) as }
+                            </Text> */}
 
                             <EditDeleteCommentButtons 
                             id={comment.id} 

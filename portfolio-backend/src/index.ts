@@ -31,11 +31,12 @@ const main = async () => {
 
     const conn = await createConnection({
         type: 'postgres',
-        url: process.env.DATABASE_URL,
         logging: true, 
+        url: process.env.DATABASE_URL,
         // synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
         entities: [Project, User, Updoot, Book, Comment]
+
     });
     
     await conn.runMigrations()
@@ -75,7 +76,7 @@ const main = async () => {
         },
         saveUninitialized: false,
         //secret should be in an environment variable file
-        secret: process.env.SESSION_SECRET,
+        secret: "ifiafuadjfkrheqkjwrhrjeqwljrlqe",
         resave: false,
      })
     );
@@ -91,7 +92,7 @@ const main = async () => {
     apolloserver.applyMiddleware({app, cors: false});
 
 
-    app.listen(parseInt(process.env.PORT) , () => {
+    app.listen(4000 , () => {
         console.log("server started on localhost:4000")
     })
 }

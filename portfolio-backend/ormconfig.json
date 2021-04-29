@@ -5,7 +5,7 @@
     "port": 5432,
     "username": "postgres",
     "password": "postgres",
-    "database": "abi",
+    "database": "meshki",
     "entities": ["dist/entities/*.js"],
     "migrations": ["dist/migrations/*.js"]
 }

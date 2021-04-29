@@ -28,7 +28,6 @@ const ProjectsGrid = () => {
     const toggleIt = () => {
         setToggle(!toggle)
     }
-    const columns = [1, 2]
     const [, deleteProject] = useDeleteProjectMutation()
 
     if (!fetching && !data) {
@@ -87,7 +86,7 @@ const ProjectsGrid = () => {
             {fetching && !data ? (
             <div>loading...</div>
             ) : (
-                <SimpleGrid columns={columns[toggle ? '0' : '1']} spacing={4}>
+                <SimpleGrid columns={toggle ? 0 : 1} spacing={4}>
                     {data!.projects.projects.map((project) =>
                     !project ? null : (
                         <Flex 
@@ -141,7 +140,7 @@ const ProjectsGrid = () => {
                             </Flex> 
                             </NextLink>
                             <NotionButton></NotionButton>
-                            <UpdootSection project={project} direction="vertical"></UpdootSection>
+                            <UpdootSection project={project}></UpdootSection>
                             
                         </Flex>
                     )
