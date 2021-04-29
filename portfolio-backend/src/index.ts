@@ -1,5 +1,6 @@
 import {COOKIE_NAME, __prod__} from "./constants";
 import 'reflect-metadata'
+// import 'dotenv-safe/config'; 
 import express from "express";
 import {ApolloServer} from "apollo-server-express";
 import {buildSchema} from 'type-graphql'
@@ -21,7 +22,7 @@ import { Book } from "./entities/Book";
 import {  CommentResolver } from "./resolvers/comment";
 import { BookResolver } from "./resolvers/book";
 import { createBookLoader } from "./utils/CreateBookLoader";
-import {Comment} from "./entities/Comment"
+import {Comment} from "./entities/Comment";
 
 
 
@@ -30,15 +31,12 @@ const main = async () => {
 
     const conn = await createConnection({
         type: 'postgres',
-        database: 'sorkhabi',
-        username: 'postgres',
-        password: 'postgres',
+        url: process.env.DATABASE_URL,
         logging: true, 
-        synchronize: true,
+        // synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
         entities: [Project, User, Updoot, Book, Comment]
     });
-
     await conn.runMigrations()
     //rerun
     // await Book.delete({})
@@ -53,11 +51,12 @@ const main = async () => {
   
 
     const RedisStore = connectRedis(session);
-    const redis = new Redis();
+    const redis = new Redis(process.env.DATABASE_URL);
 
+    app.set('proxy', 1)
     app.use(
         cors({
-            origin:"http://localhost:3000",
+            origin: process.env.CORS_ORIGIN,
             credentials: true
         })
     ) 
@@ -70,11 +69,12 @@ const main = async () => {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
             httpOnly: true,
             sameSite: "lax", //csrf
-            secure: __prod__ //cookie only works in https
+            secure: __prod__, //cookie only works in https
+            domain: __prod__ ? ".elementzero.com" : undefined,
         },
         saveUninitialized: false,
         //secret should be in an environment variable file
-        secret: 'ifiafuadjfkrheqkjwrhrjeqwljrlqe',
+        secret: process.env.SESSION_SECRET,
         resave: false,
      })
     );
@@ -90,7 +90,7 @@ const main = async () => {
     apolloserver.applyMiddleware({app, cors: false});
 
 
-    app.listen(4000, () => {
+    app.listen(parseInt(process.env.PORT) , () => {
         console.log("server started on localhost:4000")
     })
 }

@@ -3,6 +3,7 @@ import { Field,InputType, ObjectType,Int } from "type-graphql";
 import { User } from "./User";
 import { Updoot } from "./Updoot";
 import {Comment} from "./Comment";
+import { type } from "node:os";
 @ObjectType()
 @Entity()
 export class Project extends BaseEntity {
@@ -18,8 +19,8 @@ export class Project extends BaseEntity {
   @Column()
   creatorId: number;
 
-  @Field()
-  @ManyToOne(() => User, user => user.projects)
+  @Field(type => User)
+  @ManyToOne(type => User, user => user.projects)
   creator: User;
 
   @OneToMany(() => Updoot, (updoot) => updoot.project)
