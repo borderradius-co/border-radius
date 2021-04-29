@@ -98,7 +98,7 @@ const ProjectsGrid = () => {
                         borderRadius="5" 
                         direction="column" 
                         justifyContent="space-between"
-                        _hover={{border:"4px", borderColor:"#8D036F" }}
+                        _hover={{border:"1px", borderColor:"#8D036F" }}
                         >
                         
                             <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} name={project.name} />
