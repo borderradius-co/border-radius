@@ -1,5 +1,4 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
-
 export class Sabz1619749045350 implements MigrationInterface {
     name = 'Sabz1619749045350'
 

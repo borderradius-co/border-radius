@@ -1,6 +1,5 @@
 import {COOKIE_NAME, __prod__} from "./constants";
 import 'reflect-metadata'
-
 import express from "express";
 import {ApolloServer} from "apollo-server-express";
 import {buildSchema} from 'type-graphql'
@@ -28,9 +27,9 @@ require('dotenv-safe').config({ allowEmptyValues: true,
 const main = async () => {
     //rerun
     const conn = await createConnection({
+        url: process.env.DATABASE_URL,
         type: 'postgres',
         logging: true, 
-        url: process.env.DATABASE_URL,
         // synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
         entities: [Project, User, Updoot, Book, Comment]
@@ -53,7 +52,7 @@ const main = async () => {
     const RedisStore = connectRedis(session);
     const redis = new Redis(process.env.REDIS_URL,);
 
-    app.set('proxy', 1)
+    app.set('trust proxy', 1)
     app.use(
         cors({
             origin: process.env.CORS_ORIGIN,

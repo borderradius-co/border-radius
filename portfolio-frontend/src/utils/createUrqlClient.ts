@@ -75,7 +75,6 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   }
   console.log('api url:', process.env.NEXT_PUBLIC_API_URL)
   return {
-
     url: process.env.NEXT_PUBLIC_API_URL as string,
     fetchOptions: {
     credentials: 'include' as const,
