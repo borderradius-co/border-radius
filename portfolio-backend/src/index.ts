@@ -1,6 +1,6 @@
 import {COOKIE_NAME, __prod__} from "./constants";
 import 'reflect-metadata'
-// import 'dotenv-safe/config'; 
+
 import express from "express";
 import {ApolloServer} from "apollo-server-express";
 import {buildSchema} from 'type-graphql'
@@ -23,12 +23,10 @@ import {  CommentResolver } from "./resolvers/comment";
 import { BookResolver } from "./resolvers/book";
 import { createBookLoader } from "./utils/CreateBookLoader";
 import {Comment} from "./entities/Comment";
-
-
-
-
+require('dotenv-safe').config({ allowEmptyValues: true,
+});
 const main = async () => {
-
+    //rerun
     const conn = await createConnection({
         type: 'postgres',
         logging: true, 
@@ -53,7 +51,7 @@ const main = async () => {
   
 
     const RedisStore = connectRedis(session);
-    const redis = new Redis(process.env.DATABASE_URL);
+    const redis = new Redis(process.env.REDIS_URL,);
 
     app.set('proxy', 1)
     app.use(
@@ -65,8 +63,10 @@ const main = async () => {
     app.use(
      session({
         name: COOKIE_NAME,
-        store: new RedisStore({ client: redis,
-        disableTouch: true }),
+        store: new RedisStore({ 
+        client: redis,
+        disableTouch: true 
+        }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
             httpOnly: true,
@@ -76,7 +76,7 @@ const main = async () => {
         },
         saveUninitialized: false,
         //secret should be in an environment variable file
-        secret: "ifiafuadjfkrheqkjwrhrjeqwljrlqe",
+        secret: process.env.SESSION_SECRET,
         resave: false,
      })
     );
@@ -91,8 +91,8 @@ const main = async () => {
 
     apolloserver.applyMiddleware({app, cors: false});
 
-
-    app.listen(4000 , () => {
+    
+    app.listen(parseInt(process.env.PORT) , () => {
         console.log("server started on localhost:4000")
     })
 }
