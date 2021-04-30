@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Button, Flex, Text, Heading, IconButton, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Divider} from "@chakra-ui/react"
+import {Box, Button, Flex, Text, Heading,useToast, IconButton, Link, Menu, MenuButton, MenuGroup, MenuItem, MenuList, Stack, Divider, Avatar} from "@chakra-ui/react"
 import NextLink from "next/link"
 import { useMeQuery, useLogoutMutation } from "../generated/graphql";
 import {useRouter} from "next/router"
@@ -15,6 +15,7 @@ interface NavBarProps {
 }
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+        const toast = useToast()
         const router = useRouter()
         const [{fetching: logoutFetching}, logout] = useLogoutMutation();
         const [{data, fetching}] = useMeQuery(
@@ -33,9 +34,6 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                 <LoginModal/>
                 <RegisterModal/>
             </>
-                
-           
-           
         //user is logged in
         } else  {
             body = 
@@ -49,7 +47,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             variant="link" 
             _focus={{bg:"none"}} 
             style={{textDecoration: "none"}} 
-            color="green.200"
+            color="#8D036F"
             leftIcon={<MdExitToApp/>} fontWeight="hairline" >
             
             Logout
@@ -57,16 +55,27 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             </>
         }
         return (
-            <Flex zIndex={1} position="sticky" top={0}  p={4} bg="gray.800" >
-
-                <Flex flex={1} m="auto" align="center" maxW={800}>
+          
+            <Flex zIndex={1} position="sticky" top={0}  p={4} bg="white">
+                  <Box width="100%">
+                  <Flex flex={1} m="auto" align="center"  maxWidth="800px">
+                <NextLink href="/">
+                    <Avatar marginRight="4" size="sm" src ="./images/border-radius.svg"/>
+                </NextLink>
+                
+                    
                 <Home/>
-                {body} 
-               
+                {body}
+                   
                 </Flex>
-             
+                <Divider></Divider> 
 
+
+                </Box> 
+               
             </Flex>
-            
+           
         );
 }
+
+

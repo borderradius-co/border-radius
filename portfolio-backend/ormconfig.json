@@ -1,0 +1,11 @@
+{
+    "type": "postgres",
+    "host": "border-radius-do-user-8986298-0.b.db.ondigitalocean.com",
+    "port": 25060,
+    "username": "doadmin",
+    "password": "d3rncz5nch7oubv4 ",
+    "database": "defaultdb",
+    "entities": ["dist/entities/*.js"],
+    "migrations": ["dist/migrations/*.js"],
+    "sslmode": "require"
+}

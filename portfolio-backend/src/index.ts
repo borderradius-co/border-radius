@@ -17,22 +17,32 @@ import path from "path";
 import { Updoot } from "./entities/Updoot";
 import { createUserLoader } from "./utils/CreateUserLoader";
 import { createUpdootLoader } from "./utils/CreateUpdootLoader";
-
+import { Book } from "./entities/Book";
+import {  CommentResolver } from "./resolvers/comment";
+import { BookResolver } from "./resolvers/book";
+import { createBookLoader } from "./utils/CreateBookLoader";
+import {Comment} from "./entities/Comment";
+require('dotenv-safe').config({ allowEmptyValues: true,
+});
 const main = async () => {
-
+    //rerun
     const conn = await createConnection({
+        url: process.env.DATABASE_URL,
         type: 'postgres',
-        database: 'border',
-        username: 'postgres',
-        password: 'postgres',
         logging: true, 
-        synchronize: true,
+        // synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
-        entities: [Project, User, Updoot],
-    });
+        entities: [Project, User, Updoot, Book, Comment]
 
+    });
+    
     await conn.runMigrations()
     //rerun
+    // await Book.delete({})
+    // await Book.delete({})
+    // await Updoot.delete({})
+    // await User.delete({})
+    // await Module.delete({})
     // await Project.delete({})
     //rerun
 
@@ -40,44 +50,48 @@ const main = async () => {
   
 
     const RedisStore = connectRedis(session);
-    const redis = new Redis();
+    const redis = new Redis(process.env.REDIS_URL,);
 
+    app.set('trust proxy', 1)
     app.use(
         cors({
-            origin:"http://localhost:3000",
+            origin: process.env.CORS_ORIGIN,
             credentials: true
         })
     ) 
     app.use(
      session({
         name: COOKIE_NAME,
-        store: new RedisStore({ client: redis,
-        disableTouch: true }),
+        store: new RedisStore({ 
+        client: redis,
+        disableTouch: true 
+        }),
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10, //10 years
             httpOnly: true,
             sameSite: "lax", //csrf
-            secure: __prod__ //cookie only works in https
+            secure: __prod__, //cookie only works in https
+            domain: __prod__ ? ".border-radius.me" : undefined,
         },
         saveUninitialized: false,
         //secret should be in an environment variable file
-        secret: 'ifiafuadjfkrheqkjwrhrjeqwljrlqe',
+        secret: process.env.SESSION_SECRET,
         resave: false,
      })
     );
 
     const apolloserver = new ApolloServer({
         schema: await buildSchema({
-            resolvers :[HelloResolver, ProjectResolver, UserResolver],
+            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver],
             validate: false
         }),
-        context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(),})
+        context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(), createBookLoader: createBookLoader()})
     });
 
     apolloserver.applyMiddleware({app, cors: false});
 
-
-    app.listen(4000, () => {
+    
+    app.listen(parseInt(process.env.PORT) , () => {
         console.log("server started on localhost:4000")
     })
 }

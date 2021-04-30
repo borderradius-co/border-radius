@@ -11,5 +11,14 @@ query Project($id: Int!) {
       id
       username
     }
+    comments {
+      id
+      text
+      createdAt
+      user {
+        id
+        username
+      }
+    }
   }
 }

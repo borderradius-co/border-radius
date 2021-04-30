@@ -1,10 +1,10 @@
-import { Box, Flex, Link, Button } from '@chakra-ui/react';
+import { Box, Flex, Link, Button, useToast } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import { withUrqlClient } from 'next-urql';
 import router from 'next/router';
 import {useRouter} from "next/router"
 import React, { useEffect } from 'react'
-import InputField from '../components/InputField';
+import {InputField} from '../components/InputField';
 import { Layout } from '../components/Layout';
 import Wrapper from '../components/Wrapper';
 import {useCreateProjectMutation} from "../generated/graphql"
@@ -16,6 +16,7 @@ import { useIsAuth } from '../utils/useIsAuth';
 const CreateProject: React.FC<{}> = ({}) => {
         useIsAuth();
         const [, createProject] = useCreateProjectMutation();
+        const toast = useToast()
         return (
             <Layout variant="small">
                 <Formik 
@@ -23,7 +24,7 @@ const CreateProject: React.FC<{}> = ({}) => {
                 onSubmit={async (values) => {
                     const {error} = await createProject({input: values})
                     if (!error) {
-                        router.push("/");
+                        router.push("/projects");
                     } 
         }}
         >
@@ -45,7 +46,14 @@ const CreateProject: React.FC<{}> = ({}) => {
                     />
                     </Box>
 
-                    <Button marginTop={4} type="submit" colorScheme="teal" isLoading={isSubmitting}>Create Project</Button>
+                    <Button 
+                    marginTop={4} 
+                    type="submit" 
+                    colorScheme="teal" 
+                    isLoading={isSubmitting}
+                    >
+                        Create Project
+                    </Button>
                 </Form>
             )}
         </Formik>

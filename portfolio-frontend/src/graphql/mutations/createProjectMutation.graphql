@@ -1,0 +1,13 @@
+mutation CreateProjectComment($text: String!, $id: Float!) {
+  createProjectComment(comment: { text: $text }, projects: { id: $id }) {
+    id
+    text
+    user {
+      id
+      username
+    }
+    projects {
+      id
+    }
+  }
+}

@@ -28,7 +28,7 @@ class PaginatedProjects {
 export class ProjectResolver {
     @FieldResolver(() => String)
     textSnippet(@Root() root: Project) {
-        return root.text.slice(0, 50)
+        return root.text.slice(0, 200)
     }
 
     @FieldResolver(() => User)
@@ -37,6 +37,8 @@ export class ProjectResolver {
     ) {
     return userLoader.load(project.creatorId)
     }
+
+
 
     @FieldResolver(() => Int, {nullable: true})
     async voteStatus(@Root() project: Project,
@@ -51,6 +53,8 @@ export class ProjectResolver {
 
       return updoot ? updoot.value : null
     }
+  
+
 
     @Mutation(() => Boolean )
     @UseMiddleware(isAuth)
@@ -118,7 +122,7 @@ export class ProjectResolver {
         @Arg('cursor', () => String, {nullable: true}) cursor: string | null,
         @Ctx() {req}: MyContext
     ):Promise<PaginatedProjects> {
-        const realLimit = Math.min(50, limit);
+        const realLimit = Math.min(4, limit);
         const realLimitPlusOne = realLimit + 1;
 
         const replacements: any[] = [realLimitPlusOne];

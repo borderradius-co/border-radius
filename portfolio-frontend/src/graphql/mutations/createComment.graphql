@@ -1,0 +1,12 @@
+mutation CreateComment($text: String!, $id: Float!) {
+  createComment(comment: { text: $text }, books: { id: $id }) {
+    id
+    text
+    books {
+      id
+    }
+    user {
+      username
+    }
+  }
+}

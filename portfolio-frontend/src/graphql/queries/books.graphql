@@ -1,0 +1,8 @@
+query Books($limit: Int!, $cursor: String) {
+  books(limit: $limit, cursor: $cursor) {
+    hasMore
+    books {
+      ...BookSnippet
+    }
+  }
+}
