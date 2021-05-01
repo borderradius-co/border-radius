@@ -23,7 +23,12 @@ const CreateProject: React.FC<{}> = ({}) => {
                 <Formik 
                 initialValues={{name: '', text: ''}} 
                 onSubmit={async (values) => {
-                    const {errors} = await createProject({variables: {input: values}})
+                    const {errors} = await createProject({variables: {input: values},
+                        update: (cache)=> {
+                            cache.evict({fieldName: 'projects:{}'})
+                        }
+                    
+                    })
                     if (!errors) {
                         router.push("/projects");
                     } 

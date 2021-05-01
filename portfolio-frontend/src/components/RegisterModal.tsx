@@ -3,7 +3,7 @@ import { Form, Formik} from 'formik'
 import { Box,Text,Avatar, Button, Divider, Flex, Heading, Link, MenuItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure, ModalFooter, useToast} from '@chakra-ui/react';
 import Wrapper from "./Wrapper"
 import {InputField} from './InputField';
-import { useRegisterMutation } from '../generated/graphql';
+import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
 import { MdFingerprint } from "react-icons/md";
@@ -41,7 +41,16 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                 <ModalBody pb={6}>
                 <Wrapper variant={'small'}>
         <Formik initialValues={{email: '',username: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await register({variables:  {options: values}});
+            const response = await register({variables:  {options: values},
+                update:(cache, {data}) => {
+                    cache.writeQuery<MeQuery>({
+                        query: MeDocument,
+                        data: {
+                            __typename: 'Query',
+                            me: data?.register.user,
+                        }
+                    })
+            }});
             if (response.data?.register.errors) {
                
                 setErrors (toErrorMap(response.data.register.errors));

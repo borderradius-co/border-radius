@@ -3,7 +3,7 @@ import { Form, Formik} from 'formik'
 import Wrapper from "../components/Wrapper"
 import {InputField} from '../components/InputField';
 import { Box, Button, Text,Divider, Flex, Heading, Link, useToast} from '@chakra-ui/react';
-import { useLoginMutation, useMeQuery } from '../generated/graphql';
+import { MeDocument, MeQuery, useLoginMutation, useMeQuery } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
 import { withUrqlClient } from 'next-urql';
@@ -26,7 +26,17 @@ const Login: React.FC<{}> = ({}) => {
         <Layout variant="small">
 
             <Formik initialValues={{usernameOrEmail: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await login({variables: values});
+            const response = await login({variables: values,
+                update:(cache, {data}) => {
+                    cache.writeQuery<MeQuery>({
+                        query: MeDocument,
+                        data: {
+                            __typename: 'Query',
+                            me: data?.login.user,
+                        }
+                    }),
+                    cache.evict({fieldName: "projects:{}"})
+            }});
             if (response.data?.login.errors) {
                
                 setErrors (toErrorMap(response.data.login.errors));

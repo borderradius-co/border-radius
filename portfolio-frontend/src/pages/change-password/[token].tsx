@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import {InputField} from '../../components/InputField';
 import Wrapper from '../../components/Wrapper';
 import { toErrorMap } from '../../utils/toErrorMap';
-import { useChangePasswordMutation } from "../../generated/graphql";
+import { MeDocument, MeQuery, useChangePasswordMutation } from "../../generated/graphql";
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import NextLink from "next/link"
@@ -23,7 +23,17 @@ const ChangePassword: NextPage< {token: string} > | any = () => {
                 initialValues={{newPassword:''}} 
                 onSubmit={async (values, {setErrors}) => {
                     const response = await changePassword({variables: {newPassword: values.newPassword, 
-                        token: typeof router.query.token === "string" ? router.query.token : ""} 
+                        token: typeof router.query.token === "string" ? router.query.token : ""} ,
+                        update:(cache, {data}) => {
+                            cache.writeQuery<MeQuery>({
+                                query: MeDocument,
+                                data: {
+                                    __typename: 'Query',
+                                    me: data?.changePassword.user,
+                                }
+                            }),
+                            cache.evict({fieldName: "projects:{}"})
+                    }
                     });
                     if (response.data?.changePassword.errors) {
                         const errorMap = toErrorMap(response.data.changePassword.errors)
