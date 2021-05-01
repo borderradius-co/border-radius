@@ -9,25 +9,22 @@ import { withApollo } from '../utils/withApollo';
 
 
 const Index = () => {
-    const imageColors:any = ['developer', 'developer-dark']
-    const [toggle, setToggle] = useState(false)
-    const toggleIt = () => {
-        setToggle(!toggle)
-    }
+    // const imageColors:any = ['developer', 'developer-dark']
+    // const [toggle, setToggle] = useState(false)
+    // const toggleIt = () => {
+    //     setToggle(!toggle)
+    // }
     return (
         <>
         <Layout>
-            <Box maxWidth="500px" width="100%" marginX="auto">
+            {/* <Box maxWidth="500px" width="100%" marginX="auto">
             <Image src= {`./images/${imageColors[`${toggle? '0' : '1'}`]}.svg`} />
-            </Box>
-            <IconButton aria-label="Image Color" icon={<MdWbSunny/>} marginTop="16px" onClick={toggleIt}>Click me</IconButton>            
+            </Box> */}
+            {/* <IconButton aria-label="Image Color" icon={<MdWbSunny/>} marginTop="16px" onClick={toggleIt}>Click me</IconButton>             */}
             <Stack marginTop="16px" spacing="16px"> 
             <Heading fontWeight="hairline" size="2xl">About</Heading>
-            <Heading fontWeight="hairline" size="2xl">Work</Heading>
+            <Heading fontWeight="hairline" size="2xl">Projects</Heading>
             <Heading  fontWeight="hairline" size="2xl">Books</Heading>
-            <Heading  fontWeight="hairline" size="2xl">Services</Heading>
-            <Heading  fontWeight="hairline" size="2xl">Blog</Heading>
-            <Heading  fontWeight="hairline" size="2xl">Team</Heading>
 
 
             </Stack>

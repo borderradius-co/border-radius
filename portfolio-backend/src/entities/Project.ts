@@ -1,9 +1,10 @@
 import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne, OneToMany, JoinTable, ManyToMany} from "typeorm"
-import { Field,InputType, ObjectType,Int } from "type-graphql";
+import { Field, ObjectType,Int, InputType } from "type-graphql";
 import { User } from "./User";
 import { Updoot } from "./Updoot";
 import {Comment} from "./Comment";
-import { type } from "node:os";
+import { ReadStream } from "fs";
+
 @ObjectType()
 @Entity()
 export class Project extends BaseEntity {
@@ -11,7 +12,7 @@ export class Project extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn()
   id!: number;
-
+  
   @Field(() => Int, {nullable: true} )
   voteStatus: number | null; //-1, 1 or null
 

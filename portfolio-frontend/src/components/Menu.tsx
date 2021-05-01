@@ -2,10 +2,9 @@ import { MenuGroup } from '@chakra-ui/menu';
 import { Link, MenuItem, Icon, Button, Flex, IconButton, MenuButton, Menu, MenuList } from '@chakra-ui/react';
 import React from 'react'
 import NextLink from "next/link"
-import {MdMenu, MdHome, MdLibraryBooks,MdStyle} from "react-icons/md"
+import {MdMenu, MdHome, MdLibraryBooks,MdStyle,MdBrightness1} from "react-icons/md"
 
 interface HomeOptionProps {
-
 }
 
 const HomeButton: React.FC<HomeOptionProps> = ({}) => {
@@ -29,17 +28,23 @@ const HomeButton: React.FC<HomeOptionProps> = ({}) => {
                 </NextLink>
                 
                 <MenuGroup title="Work">
-                <NextLink href="/books">
-                <MenuItem icon={<MdLibraryBooks />} >
-                    Books
-                </MenuItem>    
-                </NextLink>
-                <NextLink href="/projects">
-                <MenuItem icon={<MdStyle />} >
-                    Projects
-                </MenuItem>    
-                </NextLink>
+                    <NextLink href="/books">
+                        <MenuItem icon={<MdLibraryBooks />} >
+                            Books
+                        </MenuItem>    
+                    </NextLink>
+                    <NextLink href="/projects">
+                        <MenuItem icon={<MdStyle />} >
+                            Projects
+                        </MenuItem>    
+                    </NextLink>
                 </MenuGroup>
+
+                <NextLink href="/about">
+                    <MenuItem icon={<MdBrightness1 />} >
+                        About
+                    </MenuItem>    
+                </NextLink>
                
             </MenuList>
             </Menu>

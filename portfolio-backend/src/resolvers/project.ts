@@ -1,10 +1,11 @@
-import {Project} from "../entities/Project"
+import { Project} from "../entities/Project"
 import {Arg, Ctx, Field, FieldResolver, InputType, Int, Mutation, ObjectType, Query, Resolver, Root, UseMiddleware} from "type-graphql"
 import { MyContext } from "../types"
 import { isAuth } from "../middleware/isAuth"
 import { getConnection } from "typeorm";
 import { Updoot } from "../entities/Updoot";
 import { User } from "../entities/User";
+
 
 @InputType()
 class ProjectInput {
@@ -139,22 +140,6 @@ export class ProjectResolver {
             limit $1
         `,
         replacements)
-
-        // const qb = getConnection()
-        // .getRepository(Project)
-        // .createQueryBuilder("p")
-        // .innerJoinAndSelect(
-        //     "p.creator", "u", 'u.id = p."creatorId"'
-        // )
-        // .orderBy('p."createdAt"', "DESC")
-        // .take(realLimitPlusOne)
-
-        // if (cursor) {
-        //     qb.where('p."createdAt" <  :cursor', {
-        //         cursor: new Date(parseInt(cursor))
-        //     });
-        // }
-        // const projects = await qb.getMany()
         return {
             projects: projects.slice(0, realLimit), 
             hasMore: projects.length === realLimitPlusOne,
@@ -195,10 +180,7 @@ export class ProjectResolver {
             .where('id = :id and "creatorId" = :creatorId', { id, creatorId:req.session.userId})
             .returning("*")
             .execute();
- 
-
             return result.raw[0] as any
-       
     }
 
     @Mutation(() => Boolean)
@@ -207,19 +189,17 @@ export class ProjectResolver {
         @Arg('id', () => Int) id: number, 
         @Ctx() {req}:MyContext
         ):Promise<boolean> {
-
-            //not cascade way 
-            // const project = await Project.findOne(id)
-            // if (!project) {
-            //     return false
-            // }
-            // if (project.creatorId !== req.session.userId) {
-            //     throw new Error('not authorized')
-            // }
-            // await Updoot.delete({projectId: id})
-            // await Project.delete({id})
-
             await Project.delete({id, creatorId: req.session.userId})
             return true;
     }
+
+    // @Mutation()
+    // async singleUpload(
+    //   @Arg('file', ) file: File,
+    //   @Arg('parent' ) parent: any
+    // ) {
+    //   const { stream, filename, mimetype, encoding } = await file;
+    //   return { filename, mimetype, encoding, url: '' }
+    // }
+
 }
