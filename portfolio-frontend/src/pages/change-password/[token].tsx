@@ -10,20 +10,20 @@ import { useChangePasswordMutation } from "../../generated/graphql";
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../../utils/createUrqlClient';
 import NextLink from "next/link"
+import { withApollo } from '../../utils/withApollo';
 
 const ChangePassword: NextPage< {token: string} > | any = () => {
         const router = useRouter();
         // console.log(router.query)
-        const [, changePassword] = useChangePasswordMutation();
+        const [changePassword] = useChangePasswordMutation();
         const [tokenError, setTokenError] = useState();
         return (
             <Wrapper variant={'small'}>
             <Formik 
                 initialValues={{newPassword:''}} 
                 onSubmit={async (values, {setErrors}) => {
-                    const response = await changePassword({
-                        newPassword: values.newPassword, 
-                        token: typeof router.query.token === "string" ? router.query.token : "",
+                    const response = await changePassword({variables: {newPassword: values.newPassword, 
+                        token: typeof router.query.token === "string" ? router.query.token : ""} 
                     });
                     if (response.data?.changePassword.errors) {
                         const errorMap = toErrorMap(response.data.changePassword.errors)
@@ -68,4 +68,4 @@ const ChangePassword: NextPage< {token: string} > | any = () => {
 //     return {token: query.token as string}
 // }
 
-export default withUrqlClient(createUrqlClient)(ChangePassword);
+export default withApollo({ssr: false})(ChangePassword);

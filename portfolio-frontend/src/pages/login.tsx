@@ -10,6 +10,7 @@ import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from '../utils/createUrqlClient';
 import NextLink from "next/link"
 import { Layout } from '../components/Layout';
+import { withApollo } from '../utils/withApollo';
 
 interface registerProps {
 
@@ -18,14 +19,14 @@ interface registerProps {
 
 const Login: React.FC<{}> = ({}) => {
     const router = useRouter(); 
-    const [, login] = useLoginMutation();
-    const [{data, fetching}] = useMeQuery()
+    const [login] = useLoginMutation();
+    const {data, loading}= useMeQuery()
     const toast = useToast()
     return (
         <Layout variant="small">
 
             <Formik initialValues={{usernameOrEmail: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await login(values);
+            const response = await login({variables: values});
             if (response.data?.login.errors) {
                
                 setErrors (toErrorMap(response.data.login.errors));
@@ -92,4 +93,4 @@ const Login: React.FC<{}> = ({}) => {
     );
 }
 
-export default withUrqlClient(createUrqlClient)(Login);
+export default withApollo({ssr: false})(Login);

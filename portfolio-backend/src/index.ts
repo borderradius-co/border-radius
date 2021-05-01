@@ -36,7 +36,7 @@ const main = async () => {
 
     });
     
-    await conn.runMigrations()
+    // await conn.runMigrations()
     //rerun
     // await Book.delete({})
     // await Book.delete({})

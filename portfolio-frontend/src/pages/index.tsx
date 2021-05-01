@@ -4,6 +4,7 @@ import { Layout } from "../components/Layout";
 import {Box, Flex, Heading, Link, Stack, Text, Icon, IconButton, Image, Button, LinkBox } from "@chakra-ui/react"
 import { useState } from 'react';
 import {MdWbSunny} from "react-icons/md"
+import { withApollo } from '../utils/withApollo';
 
 
 
@@ -38,10 +39,10 @@ const Index = () => {
             <Button>Sign in</Button>
             <Button marginLeft="4">Sign Up</Button>
             </Flex> */}
-          
+        
         </Layout>
         </>
     );
 };
 
-export default withUrqlClient(createUrqlClient)(Index);
+export default withApollo({ssr: true})(Index);

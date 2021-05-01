@@ -12,13 +12,14 @@ import { Formik, Form } from 'formik';
 import router from 'next/router';
 import {InputField} from '../../components/InputField';
 import {MdMoreVert} from "react-icons/md"
+import { withApollo } from '../../utils/withApollo';
 
 export const Project: React.FC<{}> = ({}) => {
     useIsAuth()
-    const [, createComment] = useCreateProjectCommentMutation();
-    const [{data, fetching, error}] = useGetProjectFromUrl()
-    const [{data: meData, fetching: meFetching}] = useMeQuery()
-    if (fetching) {
+    const [createComment] = useCreateProjectCommentMutation();
+    const {data, loading, error} = useGetProjectFromUrl()
+    const {data: meData, loading: meFetching} = useMeQuery()
+    if (loading) {
         return (
             <Layout> 
                 <div>loading...l</div>
@@ -133,8 +134,8 @@ export const Project: React.FC<{}> = ({}) => {
                 <Formik
                 initialValues={{text: '', id: data.project.id}}
                 onSubmit={async (values) => {
-                    const {error} = await createComment({text: values.text, id: values.id})
-                    if (!error) {
+                    const {errors} = await createComment( {variables: {text: values.text, id: values.id} })
+                    if (!errors) {
                         router.reload()
                     }
                 }}
@@ -174,4 +175,4 @@ export const Project: React.FC<{}> = ({}) => {
         );
 }
 
-export default withUrqlClient(createUrqlClient, {ssr: true})(Project);
+export default withApollo({ssr: true})(Project);

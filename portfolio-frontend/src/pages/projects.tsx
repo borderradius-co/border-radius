@@ -1,7 +1,7 @@
 import { NavBar } from "../components/NavBar";
 import { withUrqlClient } from 'next-urql';
 import { createUrqlClient } from "../utils/createUrqlClient";
-import {useMeQuery, useProjectsQuery, useUpdateProjectMutation}  from "../generated/graphql"
+import {ProjectQuery, ProjectsQuery, useMeQuery, useProjectsQuery, useUpdateProjectMutation}  from "../generated/graphql"
 import { Layout } from "../components/Layout";
 import NextLink from "next/link";
 import {Box, Button, Image, Flex, Heading, Link, Stack, Text, Icon, IconButton, Avatar, Divider } from "@chakra-ui/react"
@@ -13,14 +13,18 @@ import { SimpleGrid } from "@chakra-ui/react"
 import { NotionButton } from "../components/NotionButton";
 import {MdStayPrimaryPortrait, MdStayPrimaryLandscape} from "react-icons/md"
 import CreateModal from "../components/CreateModal";
+import { withApollo } from "../utils/withApollo";
 
 
 
 
-const ProjectsGrid = () => {
-    const [variables, setVariables] = useState({limit: 10, cursor: null as null | string});
-    const [{fetching, data}] = useProjectsQuery({
-        variables,
+const Projects = () => {
+    const {loading, data, fetchMore, variables} = useProjectsQuery({
+        variables: {
+            limit: 10, 
+            cursor: null
+        },
+        notifyOnNetworkStatusChange: true
     });
     const [iconVar, setIconVar] = useState('MdStayPrimaryPortrait')
     
@@ -30,7 +34,7 @@ const ProjectsGrid = () => {
     }
     const [, deleteProject] = useDeleteProjectMutation()
 
-    if (!fetching && !data) {
+    if (!loading && !data) {
         return <div>There are nothing to display! Error!</div>
     }
 
@@ -48,19 +52,7 @@ const ProjectsGrid = () => {
             >
             <Heading>Projects</Heading>
            
-              
-            {/* <IconButton key="tableModeButton" 
- onTouchTap={() => { 
-   this.setState({
-     isCardView: !this.state.isCardView
-   })
-  }}>
-   {this.state.isCardView ? <IconA /> : <IconB /> }
-</IconButton> */}
-        
-            {/* <NextLink href="/create-project">
-                <Link marginLeft="auto">Create New</Link>
-            </NextLink> */}
+            
             <Flex align="center">
             <Text marginRight="4">{toggle ? 'Mobile' : 'Tablet'}</Text>
             <IconButton  
@@ -83,10 +75,10 @@ const ProjectsGrid = () => {
             
             </Flex>
             
-            {fetching && !data ? (
+            {loading && !data ? (
             <div>loading...</div>
             ) : (
-                <SimpleGrid columns={toggle ? 0 : 1} spacing={4}>
+                <SimpleGrid columns={toggle ? 1 : 2} spacing={4}>
                     {data!.projects.projects.map((project) =>
                     !project ? null : (
                         <Flex 
@@ -147,42 +139,20 @@ const ProjectsGrid = () => {
                     
                     )}
                 </SimpleGrid>
-                
-            // <Stack spacing={8}>
-            //     {data!.projects.projects.map((project) => 
-            //     !project ? null : (
-            //         <Flex key={project.id} p={5}  borderWidth="1px" alignItems="center">
-            //             <UpdootSection project={project} ></UpdootSection> 
-            //             <Box>
-            //                 <NextLink href="/project/id" as={`/project/${project.id}`} >
-            //                     <Link>
-            //                         <Heading fontSize="xl">{project.name}</Heading>   
-            //                     </Link>  
-            //                 </NextLink>
-                                         
-            //                 <Text mt={4}>{project.text}</Text>
-            //                 <Text>Created by {project.creator.username}</Text> 
-            //                 <Box marginLeft="auto">
-            //                    <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} />
-            //                 </Box>
-                            
-                            
-            //             </Box>          
-            //         </Flex>
-
-            //     ))}
-            // </Stack>
             )}
             {data && data.projects.hasMore ? (
                 <Flex marginTop="4">
                 <Button
-                onClick={() => {
-                    setVariables({
-                        limit: variables.limit, 
-                        cursor: data.projects.projects[data.projects.projects.length - 1].createdAt,
-                    })
-                }} 
-                isLoading={fetching} 
+              onClick={() => {
+                fetchMore({
+                  variables: {
+                    limit: variables?.limit,
+                    cursor:
+                      data.projects.projects[data.projects.projects.length - 1].createdAt,
+                  },
+                });
+            }}
+                isLoading={loading} 
                 marginY="8" 
                 variant="link"
                 _hover={{bg:"none"}}
@@ -196,4 +166,4 @@ const ProjectsGrid = () => {
     );
 };
 
-export default withUrqlClient(createUrqlClient)(ProjectsGrid);
+export default withApollo({ssr: true})(Projects);

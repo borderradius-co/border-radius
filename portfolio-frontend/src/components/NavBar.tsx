@@ -8,7 +8,8 @@ import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
 import Home from "./Menu"
 import {MdExitToApp, MdPerson} from "react-icons/md"
-// import { isServer } from '../utils/isServer';
+import { isServer } from '../utils/isServer';
+import { useApolloClient } from '@apollo/client';
 
 interface NavBarProps {
 
@@ -17,16 +18,17 @@ interface NavBarProps {
 export const NavBar: React.FC<NavBarProps> = ({}) => {
         const toast = useToast()
         const router = useRouter()
-        const [{fetching: logoutFetching}, logout] = useLogoutMutation();
-        const [{data, fetching}] = useMeQuery(
-            // {pause: isServer(),}
+        const apolloClient = useApolloClient()
+        const [logout, {loading: logoutFetching}] = useLogoutMutation();
+        const {data, loading}= useMeQuery(
+        {skip: isServer(),}
 );
 
         // console.log("data: ", data)
         let body = null;
 
         //data is loading
-        if (fetching) {
+        if (loading) {
         //user is not logged in
         } else if (!data?.me) {
             body =
@@ -42,8 +44,9 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             <Button
              onClick={async () => {
                 await logout();
-                router.reload()
+                await apolloClient.resetStore()
             }} 
+            isLoading={logoutFetching}
             variant="link" 
             _focus={{bg:"none"}} 
             style={{textDecoration: "none"}} 
@@ -56,23 +59,32 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         }
         return (
           
-            <Flex zIndex={1} position="sticky" top={0}  p={4} bg="white">
+            <Flex 
+            zIndex={1}
+            position="sticky" 
+            top={0}  
+            p={4} 
+            bg="white"
+            >
                   <Box width="100%">
-                  <Flex flex={1} m="auto" align="center"  maxWidth="800px">
-                <NextLink href="/">
-                    <Avatar marginRight="4" size="sm" src ="./images/border-radius.svg"/>
-                </NextLink>
-                
-                    
-                <Home/>
-                {body}
-                   
-                </Flex>
-                <Divider></Divider> 
-
-
+                    <Flex 
+                    flex={1} 
+                    m="auto" 
+                    align="center" 
+                    maxWidth="776px"
+                    >
+                        <NextLink href="/">
+                            <Avatar 
+                            marginRight="4" 
+                            size="sm" 
+                            src ="./images/border-radius.svg"
+                            />
+                        </NextLink>        
+                        <Home/>
+                        {body}
+                    </Flex>
+                    <Divider/>
                 </Box> 
-               
             </Flex>
            
         );

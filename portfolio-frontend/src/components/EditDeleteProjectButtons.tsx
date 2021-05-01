@@ -20,8 +20,8 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
     name,
     variant='outline'
 }) => {
-    const [, deleteProject] = useDeleteProjectMutation()
-    const [{data: meData}] = useMeQuery()
+    const [deleteProject] = useDeleteProjectMutation()
+    const {data: meData} = useMeQuery()
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
     const cancelRef = React.useRef<HTMLButtonElement>(null);
@@ -45,12 +45,19 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
               />
              
               <MenuList>
-              <NextLink href="/project/edit/[id]" as={`/project/edit/${id}`} >
+              <NextLink 
+              href="/project/edit/[id]" 
+              as={`/project/edit/${id}`} 
+              >
                 <MenuItem icon={<MdModeEdit />}>
                   Edit 
                 </MenuItem>
                 </NextLink>
-                <MenuItem  color="red" icon={<MdDelete />} onClick={() => setIsOpen(true)}>
+                <MenuItem  
+                color="red" 
+                icon={<MdDelete />} 
+                onClick={() => setIsOpen(true)}
+                >
                   Delete 
                 </MenuItem>
              
@@ -70,8 +77,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
   
               <AlertDialogBody>
                       <Box>
-                      <Text>Are you sure you want to delete {name}?</Text>
-
+                        <Text>
+                          Are you sure you want to delete {name}?
+                        </Text>
                       </Box>
                 
               </AlertDialogBody>
@@ -92,7 +100,9 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 _hover={{bg:"none"}}
                 _focus={{bg:"none"}}
                 onClick={()=> {
-                    deleteProject({id})
+                    deleteProject({variables: {id}, update: (cache) => {
+                      cache.evict({id: 'Project' + id})
+                    }})
                 }} ml={3}>
                   Delete
                 </Button>

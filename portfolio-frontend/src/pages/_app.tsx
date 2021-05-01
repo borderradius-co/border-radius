@@ -5,19 +5,17 @@ import { AppProps } from "next/app";
 
 
 
-
 function MyApp({ Component, pageProps }:AppProps) {
   return (
-
-   <ChakraProvider resetCSS theme={theme}>
-      <ColorModeProvider
-        options={{
-          useSystemColorMode: false,
-        }}
-      ></ColorModeProvider>
-        <Component {...pageProps} />
-    </ChakraProvider>
-   
+    
+    <ChakraProvider resetCSS theme={theme}>
+        <ColorModeProvider
+          options={{
+            useSystemColorMode: false,
+          }}
+        ></ColorModeProvider>
+          <Component {...pageProps} />
+      </ChakraProvider>
  
   )
 }

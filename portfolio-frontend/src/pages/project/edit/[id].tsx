@@ -9,21 +9,22 @@ import { useProjectQuery, useUpdateProjectMutation } from '../../../generated/gr
 import { createUrqlClient } from '../../../utils/createUrqlClient';
 import { useGetIntId } from '../../../utils/useGetIntId';
 import { useGetProjectFromUrl } from '../../../utils/useGetProjectFromUrl';
+import { withApollo } from '../../../utils/withApollo';
 
 
 
 const UpdateProject = ({}) => {
         const router = useRouter()
         const intId = useGetIntId()
-        const [{data, fetching}] = useProjectQuery({
-            pause: intId === -1,
+        const {data, loading} = useProjectQuery({
+            skip: intId === -1,
             variables: {
                 id: intId
             }
         });
-        const [, updateProject] = useUpdateProjectMutation()
+        const [updateProject] = useUpdateProjectMutation()
 
-        if (fetching) {
+        if (loading) {
             return (
                 <Layout>
                     <div>loading...</div>
@@ -47,7 +48,7 @@ const UpdateProject = ({}) => {
             // if (!error) {
             //     router.push("/");
             // } 
-            await updateProject({id: intId, ...values})
+            await updateProject( {variables: { id: intId, ...values}})
             router.back()
         }}
         >
@@ -84,4 +85,4 @@ const UpdateProject = ({}) => {
     </Layout>);
 }
 
-export default withUrqlClient(createUrqlClient)(UpdateProject);
+export default withApollo({ssr: false})(UpdateProject);

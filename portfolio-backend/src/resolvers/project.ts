@@ -122,7 +122,7 @@ export class ProjectResolver {
         @Arg('cursor', () => String, {nullable: true}) cursor: string | null,
         @Ctx() {req}: MyContext
     ):Promise<PaginatedProjects> {
-        const realLimit = Math.min(4, limit);
+        const realLimit = Math.min(10, limit);
         const realLimitPlusOne = realLimit + 1;
 
         const replacements: any[] = [realLimitPlusOne];

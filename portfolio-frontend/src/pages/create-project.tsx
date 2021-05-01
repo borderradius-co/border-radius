@@ -10,20 +10,21 @@ import Wrapper from '../components/Wrapper';
 import {useCreateProjectMutation} from "../generated/graphql"
 import { createUrqlClient } from '../utils/createUrqlClient';
 import { useIsAuth } from '../utils/useIsAuth';
+import { withApollo } from '../utils/withApollo';
 
 // import { toErrorMap } from '../utils/toErrorMap';
 
 const CreateProject: React.FC<{}> = ({}) => {
         useIsAuth();
-        const [, createProject] = useCreateProjectMutation();
+        const [createProject] = useCreateProjectMutation();
         const toast = useToast()
         return (
             <Layout variant="small">
                 <Formik 
                 initialValues={{name: '', text: ''}} 
                 onSubmit={async (values) => {
-                    const {error} = await createProject({input: values})
-                    if (!error) {
+                    const {errors} = await createProject({variables: {input: values}})
+                    if (!errors) {
                         router.push("/projects");
                     } 
         }}
@@ -65,4 +66,4 @@ const CreateProject: React.FC<{}> = ({}) => {
         );
 }
 
-export default withUrqlClient(createUrqlClient)(CreateProject);
+export default withApollo({ssr: false})(CreateProject);

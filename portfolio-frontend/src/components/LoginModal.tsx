@@ -19,9 +19,9 @@ const LoginModal: React.FC<{}> = ({}) => {
     const callback = () => alert(`You are logged in as ${data?.me?.username}`)
 
 
-    const [, login] = useLoginMutation();
+    const [login] = useLoginMutation();
     const { isOpen, onClose, onOpen } = useDisclosure()
-    const [{data, fetching}] = useMeQuery()
+    const {data, loading} = useMeQuery()
 
     return (
         <>
@@ -41,7 +41,7 @@ const LoginModal: React.FC<{}> = ({}) => {
             <ModalBody pb={6}>
                 <Wrapper variant="small">
                 <Formik initialValues={{usernameOrEmail: '', password: ''}} onSubmit={async (values, {setErrors}) => {
-            const response = await login(values);
+            const response = await login({variables: values});
                 if (response.data?.login.errors) {
                 
                     setErrors (toErrorMap(response.data.login.errors));

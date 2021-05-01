@@ -12,15 +12,15 @@ import { Box, Flex,Breadcrumb, Text, BreadcrumbItem, BreadcrumbLink, Heading, Bu
 import NextLink from "next/link"
 import { useMeQuery } from "../../generated/graphql";
 import {MdMoreVert} from "react-icons/md"
+import { withApollo } from "../../utils/withApollo";
 
 export const Book: React.FC<{}> = ({}) => {
     useIsAuth()
-    const [, createBook] = useCreateBookMutation();
-    const [, createComment] = useCreateCommentMutation();
-    const [{data, fetching, error}] = useGetBookFromUrl()
-    const [{data: meData, fetching: meFetching}] = useMeQuery()
+    const [createComment] = useCreateCommentMutation();
+    const {data, loading, error} = useGetBookFromUrl()
+    const {data: meData, loading: meFetching} = useMeQuery()
 
-    if (fetching) {
+    if (loading) {
         return (
             <Layout> 
                 <div>loading...</div>
@@ -95,8 +95,8 @@ export const Book: React.FC<{}> = ({}) => {
                 <Formik
                 initialValues={{text: '', id: data.book.id}}
                 onSubmit={async (values) => {
-                    const {error} = await createComment({text: values.text, id: values.id})
-                    if (!error) {
+                    const {errors} = await createComment({variables: {text: values.text, id: values.id} })
+                    if (!errors) {
                         router.reload()
                     }
                 }}
@@ -137,4 +137,4 @@ export const Book: React.FC<{}> = ({}) => {
         );
 }
 
-export default withUrqlClient(createUrqlClient, {ssr: true})(Book);
+export default withApollo({ssr: true})(Book);

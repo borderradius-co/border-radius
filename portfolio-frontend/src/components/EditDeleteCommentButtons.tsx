@@ -22,8 +22,8 @@ export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> =
     variant='outline'
 }) => {
     const router = useRouter(); 
-    const [, deleteComment] = useDeleteCommentMutation()
-    const [{data: meData}] = useMeQuery()
+    const [deleteComment] = useDeleteCommentMutation()
+    const {data: meData} = useMeQuery()
     const [isOpen, setIsOpen] = React.useState(false)
     const onClose = () => setIsOpen(false)
     const cancelRef = React.useRef<HTMLButtonElement>(null);
@@ -85,7 +85,9 @@ export const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> =
                 _hover={{bg:"none"}}
                 _focus={{bg:"none"}}
                 onClick={()=> {
-                    deleteComment({id})
+                    deleteComment({variables: {id}, update: (cache) => {
+                      cache.evict({id: 'Project' + id})
+                    }})
                     router.reload()
                     
                 }} ml={3}>

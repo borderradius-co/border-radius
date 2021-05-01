@@ -5,15 +5,16 @@ import { useBooksQuery } from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import {Flex, Stack,Text, Box, Heading,Link, Button} from "@chakra-ui/react"
 import NextLink from "next/link"
+import { withApollo } from "../utils/withApollo";
 
 const Books = () => {
     // const [variables, setVariables] = useState({take: 10});
     const [variables, setVariables] = useState({limit: 10, cursor: null as null | string});
-    const [{fetching, data}] = useBooksQuery({
+    const {loading, data} = useBooksQuery({
         variables,
     });
 
-    if (!fetching && !data) {
+    if (!loading && !data) {
         return <div>There are nothing to display</div>
     }
     return (
@@ -23,7 +24,7 @@ const Books = () => {
             <Heading>Books</Heading>
             </Flex>
             
-            {fetching && !data ? (
+            {loading && !data ? (
             <div>loading...</div>
             ) : (
             <Stack spacing={8}>
@@ -55,7 +56,7 @@ const Books = () => {
                         cursor: data.books.books[data.books.books.length - 1].createdAt,
                     })
                 }} 
-                isLoading={fetching} 
+                isLoading={loading} 
                 marginY="8" 
                 variant="link">Load more...</Button>
             </Flex> 
@@ -65,4 +66,4 @@ const Books = () => {
     );
 };
 
-export default withUrqlClient(createUrqlClient)(Books);
+export default withApollo({ssr: true})(Books);
