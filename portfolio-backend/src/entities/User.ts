@@ -3,6 +3,7 @@ import { Field, ObjectType } from "type-graphql";
 import { Project } from "./Project";
 import {Updoot} from "./Updoot";
 import { Comment } from "./Comment";
+import {Color} from "./Color"
 
 @ObjectType()
 @Entity()
@@ -30,6 +31,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Comment, comment => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => Color, color => color.user)
+  colors: Color[];
 
 
   // @OneToMany(() => Comment, comment => comment.writer)

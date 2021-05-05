@@ -20,6 +20,6 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/rgbToHex.js", "src/utils/rgbToHex.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/utils/useGetColorValuesFromColors.js", "src/utils/rgbToHex.js", "src/utils/rgbToHex.js"],
   "exclude": ["node_modules"]
 }

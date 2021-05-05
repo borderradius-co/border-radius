@@ -1,0 +1,14 @@
+mutation CreateColor($options: ColorInput!) {
+  createColor(options: $options) {
+     errors {
+      field
+      message
+    }
+    color {
+      value
+      user {
+        username
+      }
+    }
+  }
+}

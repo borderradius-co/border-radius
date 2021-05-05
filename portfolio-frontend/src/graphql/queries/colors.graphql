@@ -1,0 +1,14 @@
+query Colors($limit: Int!, $cursor: String) {
+  colors(limit: $limit, cursor: $cursor) {
+    hasMore
+    colors {
+      id
+      value
+      createdAt
+      user {
+        id
+        username
+      }
+    }
+  }
+}

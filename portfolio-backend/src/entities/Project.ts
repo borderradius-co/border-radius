@@ -3,7 +3,6 @@ import { Field, ObjectType,Int, InputType } from "type-graphql";
 import { User } from "./User";
 import { Updoot } from "./Updoot";
 import {Comment} from "./Comment";
-import { ReadStream } from "fs";
 
 @ObjectType()
 @Entity()

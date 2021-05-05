@@ -4,7 +4,7 @@ import rgbToHex from '../utils/rgbToHex'
 import {MdContentCopy} from "react-icons/md"
 
 interface SingleColorProps {
-    rgb: number[];
+    rgb?: number[];
     weight?: string;
     index: number;
     hexColor?: any;
@@ -26,13 +26,15 @@ const SingleColor: React.FC<SingleColorProps> = ({rgb, weight, index, hexColor})
 
     },[alert])
     
-    console.log('rgb: ', rgb)
-    console.log('bcg: ', bcg)
-    console.log('hexColor:', hexColor)
+    // console.log('rgb: ', rgb)
+    // console.log('bcg: ', bcg)
+    // console.log('hexColor:', hexColor)
+    // console.log('hexValue: ', hexValue) 
 
         return (
             <Flex 
             minHeight="120px" 
+
             color={index>= 10 ? 'white' : 'black'} bg={`rgb(${bcg})`}
             direction="column"
             align="center"

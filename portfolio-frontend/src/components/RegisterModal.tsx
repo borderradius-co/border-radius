@@ -96,15 +96,6 @@ const RegisterOptionModal: React.FC<RegisterOptionModalProps> = ({}) => {
                     <ModalFooter marginTop={8} padding={0}>
                     <Button variant="ghost" color="gray.500"  onClick={onClose} marginRight={4}>Cancel</Button>
                     <Button 
-                    onClick={async () => {
-                        toast({
-                            title:`You have successfully signed up`,
-                            variant:"solid",
-                            isClosable:true,
-                            status:"success",
-                            position:"top-right"
-                        })
-                    }} 
                     type="submit"
                     variant="outline"
                     color="#8D036F"

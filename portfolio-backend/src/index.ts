@@ -22,6 +22,8 @@ import {  CommentResolver } from "./resolvers/comment";
 import { BookResolver } from "./resolvers/book";
 import { createBookLoader } from "./utils/CreateBookLoader";
 import {Comment} from "./entities/Comment";
+import { Color } from "./entities/Color";
+import { ColorResolver } from "./resolvers/color";
 require('dotenv-safe').config({ allowEmptyValues: true,
 });
 const main = async () => {
@@ -30,14 +32,15 @@ const main = async () => {
         url: process.env.DATABASE_URL,
         type: 'postgres',
         logging: true, 
-        // synchronize: true,
+        synchronize: true,
         migrations: [path.join(__dirname, "./migrations/*") ],
-        entities: [Project, User, Updoot, Book, Comment]
+        entities: [Project, User, Updoot, Book, Comment, Color]
 
     });
-    
-    // await conn.runMigrations()
+
+    await conn.runMigrations()
     //rerun
+    // await Color.delete({})
     // await Book.delete({})
     // await Book.delete({})
     // await Updoot.delete({})
@@ -82,7 +85,7 @@ const main = async () => {
 
     const apolloserver = new ApolloServer({
         schema: await buildSchema({
-            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver],
+            resolvers :[HelloResolver, ProjectResolver, UserResolver, CommentResolver, BookResolver, ColorResolver],
             validate: false
         }),
         context: ({req, res}) => ({ req, res, redis, userLoader: createUserLoader(), updootLoader: createUpdootLoader(), createBookLoader: createBookLoader()})

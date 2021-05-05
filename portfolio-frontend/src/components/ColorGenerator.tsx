@@ -3,13 +3,17 @@ import {border, Button, FormControl, FormErrorMessage, FormLabel, IconButton, In
 import React, { useState } from 'react'
 import { Layout } from './Layout';
 import Values from "values.js"
-import {useField} from "formik";
+import {Form, Formik, useField} from "formik";
 import SingleColor  from './SingleColor';
 import { ChromePicker } from 'react-color';
 import {MdColorize} from "react-icons/md"
 import { InputField } from './InputField';
 import {MdShuffle} from "react-icons/md";
 import randomColor from "randomcolor"
+import {useCreateColorMutation} from "../generated/graphql"
+import { toErrorMap } from '../utils/toErrorMap';
+import {useRouter} from "next/router"
+
 
 
 
@@ -20,10 +24,13 @@ interface ColorGeneratorProps {
 
 const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
     const [color, setColor] = useState('#8D036F')
+    const [createColor] = useCreateColorMutation();
     const [error, setError] = useState(false)
     const [list, setList] = useState(new Values('#8D036F').all(10))
     const [picker, setPicker] = useState(false)
     const randomlyGeneratedColor = randomColor()
+    const router = useRouter(); 
+
 
 
 
@@ -49,6 +56,7 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
 
     const generateRandomColor = (e: any) => {
        e.preventDefault()
+       setColor(randomlyGeneratedColor)
        try {
            let colors = new Values(randomlyGeneratedColor).all(10)
            setList(colors)
@@ -61,6 +69,7 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
+        setColor(color)
         try {
             let colors = new Values(color).all(10)
             setList(colors)
@@ -88,6 +97,49 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
     
         return (
             <Layout>
+                <Formik initialValues={{value: ''}} onSubmit={async (values, {setErrors}) => {
+            const response = await createColor({variables: {options: values}});
+            if (response.data?.createColor.errors) {
+                setErrors (toErrorMap(response.data.createColor.errors));
+            } else if(response.data?.createColor.color) {
+                router.push("/colors")
+            }
+        }}>
+            {({isSubmitting}) => (
+                <Form>
+                    <Heading fontWeight="medium" marginBottom={4} size="lg" >Welcome to Border Radius</Heading>
+                    <InputField 
+                    name="value"
+                    placeholder="#8D036F"
+                    label="Hex Value"
+                    />
+                        <Button 
+                        type="submit" 
+                        variant="outline" 
+                        color="green.200" 
+                        isLoading={isSubmitting}>Save Color</Button>
+                </Form>
+            )}
+        </Formik>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 <Flex 
                 align="center" 
                 marginBottom="4" 
@@ -96,9 +148,10 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
                 <Heading>Colors</Heading>
                   
                 <Flex align="center">
+                   
+
                      <form onSubmit={handleSubmit}>
                      <Flex align="flex-end" width="100%" justify="space-between">
-             
                         <FormControl width="100%">
                                 <Input 
                                     _active={{borderColor: {color} }}
@@ -118,6 +171,7 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
                                     >
                                 </Input>
                         </FormControl>
+
                             
                             </Flex>
 
@@ -165,6 +219,8 @@ const ColorGenerator: React.FC<ColorGeneratorProps> = ({}) => {
                 >
                     Random Color
                 </Button>
+                <Button variant="outline" colorScheme="blue" marginLeft="8px">Save</Button>
+
 
 
                 </Flex>

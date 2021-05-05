@@ -27,6 +27,26 @@ export type BookToComment = {
   id: Scalars['Float'];
 };
 
+export type Color = {
+  __typename?: 'Color';
+  id: Scalars['Float'];
+  userId: Scalars['Float'];
+  user: User;
+  value: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type ColorFieldError = {
+  __typename?: 'ColorFieldError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
+export type ColorInput = {
+  value: Scalars['String'];
+};
+
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['Float'];
@@ -70,6 +90,8 @@ export type Mutation = {
   createBook: Book;
   updateBook: Book;
   deleteBook: Book;
+  createColor: UserColorResponse;
+  deleteColor: Scalars['Boolean'];
 };
 
 
@@ -156,9 +178,25 @@ export type MutationDeleteBookArgs = {
   id: Scalars['String'];
 };
 
+
+export type MutationCreateColorArgs = {
+  options: ColorInput;
+};
+
+
+export type MutationDeleteColorArgs = {
+  id: Scalars['Int'];
+};
+
 export type PaginatedBooks = {
   __typename?: 'PaginatedBooks';
   books: Array<Book>;
+  hasMore: Scalars['Boolean'];
+};
+
+export type PaginatedColors = {
+  __typename?: 'PaginatedColors';
+  colors: Array<Color>;
   hasMore: Scalars['Boolean'];
 };
 
@@ -203,6 +241,7 @@ export type Query = {
   allBooks: Array<Book>;
   books: PaginatedBooks;
   book?: Maybe<Book>;
+  colors: PaginatedColors;
 };
 
 
@@ -249,6 +288,12 @@ export type QueryBookArgs = {
   slug?: Maybe<Scalars['String']>;
 };
 
+
+export type QueryColorsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Int'];
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
@@ -256,6 +301,12 @@ export type User = {
   email: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type UserColorResponse = {
+  __typename?: 'UserColorResponse';
+  errors?: Maybe<Array<ColorFieldError>>;
+  color?: Maybe<Color>;
 };
 
 export type UserResponse = {
@@ -332,6 +383,29 @@ export type CreateBookMutation = (
     & { comments: Array<(
       { __typename?: 'Comment' }
       & Pick<Comment, 'id' | 'text'>
+    )> }
+  ) }
+);
+
+export type CreateColorMutationVariables = Exact<{
+  options: ColorInput;
+}>;
+
+
+export type CreateColorMutation = (
+  { __typename?: 'Mutation' }
+  & { createColor: (
+    { __typename?: 'UserColorResponse' }
+    & { errors?: Maybe<Array<(
+      { __typename?: 'ColorFieldError' }
+      & Pick<ColorFieldError, 'field' | 'message'>
+    )>>, color?: Maybe<(
+      { __typename?: 'Color' }
+      & Pick<Color, 'value'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'username'>
+      ) }
     )> }
   ) }
 );
@@ -541,6 +615,28 @@ export type BooksQuery = (
   ) }
 );
 
+export type ColorsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ColorsQuery = (
+  { __typename?: 'Query' }
+  & { colors: (
+    { __typename?: 'PaginatedColors' }
+    & Pick<PaginatedColors, 'hasMore'>
+    & { colors: Array<(
+      { __typename?: 'Color' }
+      & Pick<Color, 'id' | 'value' | 'createdAt'>
+      & { user: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      ) }
+    )> }
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -715,6 +811,48 @@ export function useCreateBookMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateBookMutationHookResult = ReturnType<typeof useCreateBookMutation>;
 export type CreateBookMutationResult = Apollo.MutationResult<CreateBookMutation>;
 export type CreateBookMutationOptions = Apollo.BaseMutationOptions<CreateBookMutation, CreateBookMutationVariables>;
+export const CreateColorDocument = gql`
+    mutation CreateColor($options: ColorInput!) {
+  createColor(options: $options) {
+    errors {
+      field
+      message
+    }
+    color {
+      value
+      user {
+        username
+      }
+    }
+  }
+}
+    `;
+export type CreateColorMutationFn = Apollo.MutationFunction<CreateColorMutation, CreateColorMutationVariables>;
+
+/**
+ * __useCreateColorMutation__
+ *
+ * To run a mutation, you first call `useCreateColorMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateColorMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createColorMutation, { data, loading, error }] = useCreateColorMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useCreateColorMutation(baseOptions?: Apollo.MutationHookOptions<CreateColorMutation, CreateColorMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateColorMutation, CreateColorMutationVariables>(CreateColorDocument, options);
+      }
+export type CreateColorMutationHookResult = ReturnType<typeof useCreateColorMutation>;
+export type CreateColorMutationResult = Apollo.MutationResult<CreateColorMutation>;
+export type CreateColorMutationOptions = Apollo.BaseMutationOptions<CreateColorMutation, CreateColorMutationVariables>;
 export const CreateCommentDocument = gql`
     mutation CreateComment($text: String!, $id: Float!) {
   createComment(comment: {text: $text}, books: {id: $id}) {
@@ -1223,6 +1361,51 @@ export function useBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Book
 export type BooksQueryHookResult = ReturnType<typeof useBooksQuery>;
 export type BooksLazyQueryHookResult = ReturnType<typeof useBooksLazyQuery>;
 export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
+export const ColorsDocument = gql`
+    query Colors($limit: Int!, $cursor: String) {
+  colors(limit: $limit, cursor: $cursor) {
+    hasMore
+    colors {
+      id
+      value
+      createdAt
+      user {
+        id
+        username
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useColorsQuery__
+ *
+ * To run a query within a React component, call `useColorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useColorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useColorsQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
+ *   },
+ * });
+ */
+export function useColorsQuery(baseOptions: Apollo.QueryHookOptions<ColorsQuery, ColorsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ColorsQuery, ColorsQueryVariables>(ColorsDocument, options);
+      }
+export function useColorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ColorsQuery, ColorsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ColorsQuery, ColorsQueryVariables>(ColorsDocument, options);
+        }
+export type ColorsQueryHookResult = ReturnType<typeof useColorsQuery>;
+export type ColorsLazyQueryHookResult = ReturnType<typeof useColorsLazyQuery>;
+export type ColorsQueryResult = Apollo.QueryResult<ColorsQuery, ColorsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

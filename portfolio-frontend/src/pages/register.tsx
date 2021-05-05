@@ -81,15 +81,6 @@ const Register: React.FC<registerProps> = ({}) => {
 
                         </NextLink>
                         <Button
-                        onClick={async () => {
-                            toast({
-                                title:`You have successfully signed up`,
-                                variant:"solid",
-                                isClosable:true,
-                                status:"success",
-                                position:"top-right"
-                            })
-                        }}  
                         type="submit" 
                         variant="outline" 
                         color="green.200" 
