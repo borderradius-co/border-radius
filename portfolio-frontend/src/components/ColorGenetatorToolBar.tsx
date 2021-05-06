@@ -1,5 +1,5 @@
 import { Box, Circle,Square, Flex, Heading, SimpleGrid, Spacer, Stack } from '@chakra-ui/layout';
-import {border, Text,Button, FormControl, FormErrorMessage, FormLabel, IconButton, Input, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Avatar, Divider} from "@chakra-ui/react"
+import {border, Text,Button, useToast,FormControl, FormErrorMessage, FormLabel, IconButton, Input, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Avatar, Divider} from "@chakra-ui/react"
 import React, { useState } from 'react'
 import { Layout } from './Layout';
 import Values from "values.js"
@@ -42,6 +42,9 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
         }, 100);
         
     };
+
+    const toast = useToast()
+
 
   
 
@@ -106,16 +109,28 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
             initialValues={{value: color}}   
             onSubmit={async (values, {setErrors}) => 
             {
-            
-            const response = await createColor({variables: {value: color}
-                
-            });
-            
+
+            const response = await createColor({variables: {value: color},
+                update: (cache) => {
+                    cache.evict(({fieldName: 'colors:{}'}))
+                }   
+            })
             if (response.data?.createColor.errors) {
                 setErrors (toErrorMap(response.data.createColor.errors));
             } else if(response.data?.createColor.color) {
                 router.push("/colors")
+                toast({
+                    title: `${color} is saved`,
+                    status:'success',
+                    position: 'top-right'
+                })
             }
+            
+            // const response = await createColor({variables: {value: color}
+                
+            // });
+            
+            
             }}>
             
             {({isSubmitting}) => (
