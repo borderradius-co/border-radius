@@ -5,6 +5,8 @@ import {Box, Flex, Heading, Link, Stack, Text, Icon, IconButton, Image, Button, 
 import { useState } from 'react';
 import {MdWbSunny} from "react-icons/md"
 import { withApollo } from '../utils/withApollo';
+import ColorGenerator from '../components/ColorGenerator';
+import ColorGenetatorToolBar from '../components/ColorGenetatorToolBar';
 
 
 
@@ -25,6 +27,8 @@ const Index = () => {
             <Heading fontWeight="hairline" size="2xl">About</Heading>
             <Heading fontWeight="hairline" size="2xl">Projects</Heading>
             <Heading  fontWeight="hairline" size="2xl">Books</Heading>
+            <ColorGenetatorToolBar/>
+
 
 
             </Stack>

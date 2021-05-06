@@ -53,7 +53,7 @@ export class ColorResolver {
         @Arg('limit', () => Int) limit: number,
         @Arg('cursor', () => String, {nullable:true}) cursor: string | null
     ): Promise<PaginatedColors> {
-        const realLimit = Math.min(50, limit)
+        const realLimit = Math.min(10, limit)
         const realLimitPlusOne = realLimit + 1
 
         const replacements: any[] = [realLimitPlusOne]

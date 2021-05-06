@@ -15,7 +15,7 @@ interface LoginOptionModalProps {
 
 const LoginModal: React.FC<{}> = ({}) => {
     const router = useRouter(); 
-    const id = "username-toast"
+    
     const callback = () => alert(`You are logged in as ${data?.me?.username}`)
 
 

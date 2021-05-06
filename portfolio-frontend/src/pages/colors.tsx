@@ -16,7 +16,7 @@ const Colors: React.FC<colorsProps> = ({}) => {
         <Layout>
                 <Heading>Colors</Heading>
                  <ColorGenetatorToolBar/>
-                 <ColorValueList/>
+                 <ColorValueList />
         </Layout>
        
          

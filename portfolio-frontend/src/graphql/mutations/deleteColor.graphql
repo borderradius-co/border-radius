@@ -1,0 +1,3 @@
+mutation DeleteColor($id: Int!) {
+  deleteColor(id: $id) 
+}

@@ -8,7 +8,7 @@ import SingleColor  from './SingleColor';
 import { ChromePicker } from 'react-color';
 import {MdColorize} from "react-icons/md"
 import { CustomInputField } from './CustomInputField';
-import {MdShuffle, MdSave, MdBrightness2} from "react-icons/md";
+import {MdShuffle, MdSave, MdRefresh} from "react-icons/md";
 import randomColor from "randomcolor"
 import {ColorsDocument, ColorsQuery, useCreateColorMutation} from "../generated/graphql"
 import { toErrorMap } from '../utils/toErrorMap';
@@ -101,6 +101,9 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
       const handleCreateColor = () => {
         createColor({variables: {value: color}})
     }
+    const reload = () => {
+        router.reload()
+    }
     
         return (
             <>
@@ -118,7 +121,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
             if (response.data?.createColor.errors) {
                 setErrors (toErrorMap(response.data.createColor.errors));
             } else if(response.data?.createColor.color) {
-                router.push("/colors")
+                router.reload()
                 toast({
                     title: `${color} is saved`,
                     status:'success',
@@ -135,8 +138,9 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
             
             {({isSubmitting}) => (
                         <Form>
-                            <Flex>
-                                <Box marginBottom="8" width="100%">
+                           
+                                <Flex justify="flex-end">
+                                    <Spacer/>
                                     <CustomInputField 
                                     name="value" 
                                     color={color}
@@ -147,9 +151,11 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                                     onChange= {handleChange}
 
                                     />
-                                </Box>
-                            </Flex>
-                            <Flex direction="column" >
+                              
+                                </Flex>
+                                   
+                            
+                        <Flex direction="column" >
                                 
                         <Flex marginBottom="8px" align="center">
                         
@@ -162,7 +168,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                         
                         />
                         <Text marginLeft="2" color={color}>{color.toUpperCase()}</Text>
-                        <Divider marginLeft="2" marginRight="2"/>
+                        <Spacer/>
 
                         
                          <IconButton
@@ -218,7 +224,19 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                                 isLoading={isSubmitting}
                                 // borderRadius="50"
                                 
-                                />    
+                        />    
+                        <IconButton 
+                                aria-label="Picker" 
+                                icon={<MdRefresh/>} 
+                                onClick={reload}
+                                variant="outline"
+                                _active={{bg:{color}}}
+                                _focus={{bg: {color} }}
+                                _hover={{bg: {color} }}
+                                marginLeft="2"
+                                // borderRadius="50"
+                                
+                        />   
                        
 
                         
@@ -256,9 +274,8 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
             
                 
                    
-                <SimpleGrid column={1}>
                     
-                    <SimpleGrid columns={7} spacing={0} marginTop="20px">
+                    <SimpleGrid columns={7} spacing={0} >
                        
 
                             {list.map((color: any, index: any) => {
@@ -273,7 +290,6 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                     
 
                     
-                </SimpleGrid>            
             </>
         );
 }
