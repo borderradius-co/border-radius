@@ -63,7 +63,10 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             zIndex={1}
             position="sticky" 
             top={0}  
-            p={4} 
+         
+            paddingTop={4}
+            paddingLeft={4}
+            paddingRight={4} 
             bg="white"
             >
                   <Box width="100%">
@@ -72,6 +75,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                     m="auto" 
                     align="center" 
                     maxWidth="776px"
+                    marginBottom="2"
                     >
                         <NextLink href="/">
                             <Avatar 

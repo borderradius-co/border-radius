@@ -26,7 +26,6 @@ export const CustomInputField = forwardRef<HTMLInputElement, CustomInputFieldPro
         
         marginTop="8px"
         width="100%"
-        color={color}
         borderBottom="2px"
         _active={{borderColor: {color} }}
         _focus={{borderColor: {color} }}

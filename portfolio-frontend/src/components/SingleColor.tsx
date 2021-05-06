@@ -26,10 +26,6 @@ const SingleColor: React.FC<SingleColorProps> = ({rgb, weight, index, hexColor})
 
     },[alert])
     
-    // console.log('rgb: ', rgb)
-    // console.log('bcg: ', bcg)
-    // console.log('hexColor:', hexColor)
-    // console.log('hexValue: ', hexValue) 
 
         return (
             <Flex 

@@ -1,5 +1,5 @@
-mutation CreateColor($options: ColorInput!) {
-  createColor(options: $options) {
+mutation CreateColor($value: String!) {
+  createColor(value: $value) {
      errors {
       field
       message

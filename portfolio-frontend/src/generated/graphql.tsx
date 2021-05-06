@@ -43,10 +43,6 @@ export type ColorFieldError = {
   message: Scalars['String'];
 };
 
-export type ColorInput = {
-  value: Scalars['String'];
-};
-
 export type Comment = {
   __typename?: 'Comment';
   id: Scalars['Float'];
@@ -180,7 +176,7 @@ export type MutationDeleteBookArgs = {
 
 
 export type MutationCreateColorArgs = {
-  options: ColorInput;
+  value: Scalars['String'];
 };
 
 
@@ -388,7 +384,7 @@ export type CreateBookMutation = (
 );
 
 export type CreateColorMutationVariables = Exact<{
-  options: ColorInput;
+  value: Scalars['String'];
 }>;
 
 
@@ -812,8 +808,8 @@ export type CreateBookMutationHookResult = ReturnType<typeof useCreateBookMutati
 export type CreateBookMutationResult = Apollo.MutationResult<CreateBookMutation>;
 export type CreateBookMutationOptions = Apollo.BaseMutationOptions<CreateBookMutation, CreateBookMutationVariables>;
 export const CreateColorDocument = gql`
-    mutation CreateColor($options: ColorInput!) {
-  createColor(options: $options) {
+    mutation CreateColor($value: String!) {
+  createColor(value: $value) {
     errors {
       field
       message
@@ -842,7 +838,7 @@ export type CreateColorMutationFn = Apollo.MutationFunction<CreateColorMutation,
  * @example
  * const [createColorMutation, { data, loading, error }] = useCreateColorMutation({
  *   variables: {
- *      options: // value for 'options'
+ *      value: // value for 'value'
  *   },
  * });
  */

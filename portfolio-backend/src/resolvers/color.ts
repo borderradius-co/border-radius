@@ -53,7 +53,7 @@ export class ColorResolver {
         @Arg('limit', () => Int) limit: number,
         @Arg('cursor', () => String, {nullable:true}) cursor: string | null
     ): Promise<PaginatedColors> {
-        const realLimit = Math.min(4, limit)
+        const realLimit = Math.min(50, limit)
         const realLimitPlusOne = realLimit + 1
 
         const replacements: any[] = [realLimitPlusOne]
@@ -79,10 +79,10 @@ export class ColorResolver {
     @Mutation(() => UserColorResponse)
     @UseMiddleware(isAuth)
     async createColor(
-        @Arg('options', ()=> ColorInput) options:ColorInput,
+        @Arg('value', ()=> String) value:string,
         @Ctx() {req}:MyContext
     ):Promise<UserColorResponse> {
-            const errors = validateColor(options)
+            const errors = validateColor(value)
             if (errors) {
                 return {errors}
             }
@@ -92,7 +92,7 @@ export class ColorResolver {
             try {
                 const result = await getConnection().createQueryBuilder().insert().into(Color).values(
             {
-                value: options.value,
+                value: value,
                 userId: req.session.userId,
                 
             }
