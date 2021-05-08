@@ -23,7 +23,7 @@ class PaginatedColors {
     colors: Color[]
 
     @Field()
-    hasMore: boolean
+    hasMore: boolean;
 }
 
 @ObjectType()
@@ -56,9 +56,9 @@ export class ColorResolver {
         const realLimit = Math.min(10, limit)
         const realLimitPlusOne = realLimit + 1
 
-        const replacements: any[] = [realLimitPlusOne]
+        const replacements: any[] = [realLimitPlusOne];
 
-         if (cursor) {
+        if (cursor) {
             replacements.push(new Date(parseInt(cursor)))
         }
 
@@ -70,6 +70,9 @@ export class ColorResolver {
             limit $1
         `,
         replacements)
+        console.log('colors: ', colors)
+        console.log('replacements:',  replacements)
+        
         return {
             colors: colors.slice(0, realLimit), 
             hasMore: colors.length === realLimitPlusOne,

@@ -1,21 +1,20 @@
-import { Box, Circle,Square, Flex, Heading, SimpleGrid, Spacer, Stack } from '@chakra-ui/layout';
-import {border, Text,Button, useToast,FormControl, FormErrorMessage, FormLabel, IconButton, Input, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Avatar, Divider} from "@chakra-ui/react"
+import { Square, Flex,SimpleGrid, Spacer } from '@chakra-ui/layout';
+import { Text, useToast, IconButton, Input, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Avatar, Divider, useDisclosure} from "@chakra-ui/react"
 import React, { useState } from 'react'
-import { Layout } from './Layout';
-import Values from "values.js"
 import {Form, Formik, useField} from "formik";
 import SingleColor  from './SingleColor';
 import { ChromePicker } from 'react-color';
-import {MdColorize} from "react-icons/md"
+import {MdColorize, MdSave,MdContentCopy} from "react-icons/md"
 import { CustomInputField } from './CustomInputField';
-import {MdShuffle, MdSave, MdRefresh} from "react-icons/md";
+import {MdShuffle, MdRefresh} from "react-icons/md";
 import randomColor from "randomcolor"
-import {ColorsDocument, ColorsQuery, useCreateColorMutation} from "../generated/graphql"
+import {useColorsQuery, useCreateColorMutation} from "../generated/graphql"
 import { toErrorMap } from '../utils/toErrorMap';
 import {useRouter} from "next/router"
-import {useColorsQuery} from "../generated/graphql"
 import { withApollo } from "../utils/withApollo";
 import { colorGenerator } from '../utils/colorGenerator';
+import { useMeQuery } from '../generated/graphql';
+
 
 
 
@@ -26,14 +25,24 @@ interface ColorGeneratorToolBarProps {
 const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
     const [color, setColor] = useState('#8D036F')
     const [createColor] = useCreateColorMutation();
+    const {data} = useColorsQuery({
+        variables: {
+            limit: 10,
+            cursor: null
+        }
+    })
     const [error, setError] = useState(false)
-    const [list, setList] = useState(new Values('#8D036F').all(10))
+    const [list, setList] = useState(colorGenerator('#8D036F'))
     const [picker, setPicker] = useState(false)
     const randomlyGeneratedColor = randomColor()
     const router = useRouter(); 
+    const { isOpen, onClose, onOpen } = useDisclosure()
+    const {data: meData} = useMeQuery()
     const hexValue = `#${color}`
-    console.log("color from toolbar:", color)
+    // const notLoggedIn = !meData?.me?.id
 
+    // console.log("not logged in?: ", notLoggedIn)
+    
 
     const handleChangeComplete = (color:any) => {
         setColor(color.hex)
@@ -54,7 +63,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
        
        try {
            
-           let colors = new Values(randomlyGeneratedColor).all(10)
+           let colors = colorGenerator(randomlyGeneratedColor)
            setList(colors)
            
        } catch(error) {
@@ -69,7 +78,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
         
         try {
             
-            let colors = new Values(color).all(10)
+            let colors = colorGenerator(color)
             setList(colors)
             console.log('colors: ', colors)
 
@@ -86,7 +95,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
     const handleColorChange = (e:any) => {
         try {
             
-            let colors = new Values(color).all(10)
+            let colors = colorGenerator(color)
             setList(colors)
             console.log('colors: ', colors)
 
@@ -127,13 +136,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                     status:'success',
                     position: 'top-right'
                 })
-            }
-            
-            // const response = await createColor({variables: {value: color}
-                
-            // });
-            
-            
+            }           
             }}>
             
             {({isSubmitting}) => (
@@ -146,10 +149,8 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                                     color={color}
                                     value={color}
                                     placeholder="#8D036F"
-                                    // value={color}
                                     onKeyUp={handleSubmit}
                                     onChange= {handleChange}
-
                                     />
                               
                                 </Flex>
@@ -192,9 +193,7 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                                 variant="outline"
                                 _active={{bg:{color}}}
                                 _focus={{bg: {color} }}
-                                _hover={{bg: {color} }}
-                                // borderRadius="50"
-                                
+                                _hover={{bg: {color} }}                                
                                 />
                             </PopoverTrigger>
                             <PopoverContent 
@@ -212,36 +211,29 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
                                 /></PopoverBody>
                             </PopoverContent>
                         </Popover>
-                        <IconButton 
-                                aria-label="Picker" 
-                                type="submit"
+                        
+                         <IconButton 
+                                aria-label="Save" 
                                 icon={<MdSave/>} 
+                                type="submit"
+                                isLoading={isSubmitting}
                                 variant="outline"
                                 _active={{bg:{color}}}
                                 _focus={{bg: {color} }}
                                 _hover={{bg: {color} }}
                                 marginLeft="2"
-                                isLoading={isSubmitting}
-                                // borderRadius="50"
-                                
-                        />    
+                                // hidden={notLoggedIn ? true : false}
+                        /> 
                         <IconButton 
-                                aria-label="Picker" 
+                                aria-label="Reload" 
                                 icon={<MdRefresh/>} 
                                 onClick={reload}
                                 variant="outline"
                                 _active={{bg:{color}}}
                                 _focus={{bg: {color} }}
                                 _hover={{bg: {color} }}
-                                marginLeft="2"
-                                // borderRadius="50"
-                                
-                        />   
-                       
-
-                        
-                      
-                        
+                                marginLeft="2"  
+                        />                        
                     </Flex>
                     <Flex>
                     </Flex>
@@ -253,29 +245,9 @@ const ColorGeneratorToolBar: React.FC<ColorGeneratorToolBarProps> = ({}) => {
 
                         </Form>
                         )}
-            </Formik>
-{/* 
-            <form onSubmit={handleCreateColor}>
-                 <IconButton 
-                                aria-label="Picker" 
-                                type="submit"
-                                icon={<MdSave/>} 
-                                variant="outline"
-                                _active={{bg:{color}}}
-                                _focus={{bg: {color} }}
-                                _hover={{bg: {color} }}
-                                // borderRadius="50"
-                                
-                                />    
-
-            </form> */}
-
-                                       
-            
-                
-                   
-                    
-                    <SimpleGrid columns={7} spacing={0} >
+            </Formik>            
+                    <SimpleGrid columns={9} spacing={0} >
+                  
                        
 
                             {list.map((color: any, index: any) => {

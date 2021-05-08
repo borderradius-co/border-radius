@@ -32,7 +32,6 @@ const Projects = () => {
     const toggleIt = () => {
         setToggle(!toggle)
     }
-    const [, deleteProject] = useDeleteProjectMutation()
 
     if (!loading && !data) {
         return <div>There are nothing to display! Error!</div>
@@ -111,7 +110,7 @@ const Projects = () => {
                                 <Flex marginBottom="4" marginTop="4" align="center">
 
                                     <Avatar   
-                                    src="https://bit.ly/code-beast"  
+                                    src="https://drive.google.com/thumbnail?id=1ZjpqPRooXmFrTNR2PpGduhK_eRSmHi97"  
                                     name={project.creator.username} 
                                     size="xs" bg="blue.900"
                                      color="white" 
@@ -135,9 +134,7 @@ const Projects = () => {
                             <UpdootSection project={project}></UpdootSection>
                             
                         </Flex>
-                    )
-                    
-                    )}
+                    ))}
                 </SimpleGrid>
             )}
             {data && data.projects.hasMore ? (

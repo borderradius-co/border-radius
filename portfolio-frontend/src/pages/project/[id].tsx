@@ -76,7 +76,7 @@ export const Project: React.FC<{}> = ({}) => {
                     >
                         <HStack width="10%" spacing="2">
                
-                        <Avatar  size="sm" src="https://bit.ly/code-beast"  bg="blue.800" color="white"/>
+                        <Avatar  size="sm" src=" https://drive.google.com/thumbnail?id=1ZjpqPRooXmFrTNR2PpGduhK_eRSmHi97"  bg="blue.800" color="white"/>
                         <Divider width="100%" bg="red"/>
 
                         </HStack>
@@ -106,7 +106,7 @@ export const Project: React.FC<{}> = ({}) => {
                             <Flex align="center" width="100%" justify="space-between">
                             {/* <Text 
                             fontSize="xx-small">
-                                {Date(comment.createdAt) as }
+                                {Date(comment.createdAt)}
                             </Text> */}
 
                             <EditDeleteCommentButtons 

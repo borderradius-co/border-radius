@@ -29,7 +29,7 @@ const SingleColor: React.FC<SingleColorProps> = ({rgb, weight, index, hexColor})
 
         return (
             <Flex 
-            minHeight="100px" 
+            minHeight="140px" 
 
             color={index>= 10 ? 'white' : 'black'} bg={`rgb(${bcg})`}
             direction="column"

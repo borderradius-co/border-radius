@@ -322,6 +322,15 @@ export type BookSnippetFragment = (
   & Pick<Book, 'id' | 'title' | 'createdAt' | 'updatedAt'>
 );
 
+export type ColorSnippetFragment = (
+  { __typename?: 'Color' }
+  & Pick<Color, 'id' | 'value' | 'createdAt' | 'updatedAt'>
+  & { user: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  ) }
+);
+
 export type DefaultErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
@@ -634,11 +643,7 @@ export type ColorsQuery = (
     & Pick<PaginatedColors, 'hasMore'>
     & { colors: Array<(
       { __typename?: 'Color' }
-      & Pick<Color, 'id' | 'value' | 'createdAt'>
-      & { user: (
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username'>
-      ) }
+      & ColorSnippetFragment
     )> }
   ) }
 );
@@ -702,6 +707,18 @@ export const BookSnippetFragmentDoc = gql`
   title
   createdAt
   updatedAt
+}
+    `;
+export const ColorSnippetFragmentDoc = gql`
+    fragment ColorSnippet on Color {
+  id
+  value
+  createdAt
+  updatedAt
+  user {
+    id
+    username
+  }
 }
     `;
 export const DefaultErrorFragmentDoc = gql`
@@ -1403,17 +1420,11 @@ export const ColorsDocument = gql`
   colors(limit: $limit, cursor: $cursor) {
     hasMore
     colors {
-      id
-      value
-      createdAt
-      user {
-        id
-        username
-      }
+      ...ColorSnippet
     }
   }
 }
-    `;
+    ${ColorSnippetFragmentDoc}`;
 
 /**
  * __useColorsQuery__

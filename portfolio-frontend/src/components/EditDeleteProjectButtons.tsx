@@ -103,6 +103,7 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                     deleteProject({variables: {id}, update: (cache) => {
                       cache.evict({id: 'Project' + id})
                     }})
+                    
                 }} ml={3}>
                   Delete
                 </Button>

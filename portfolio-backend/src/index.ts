@@ -40,7 +40,7 @@ const main = async () => {
 
     await conn.runMigrations()
     //rerun
-    await Color.delete({})
+    // await Color.delete({})
     // await Book.delete({})
     // await Book.delete({})
     // await Updoot.delete({})

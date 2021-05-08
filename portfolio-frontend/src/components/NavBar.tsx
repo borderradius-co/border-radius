@@ -81,7 +81,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
                             <Avatar 
                             marginRight="4" 
                             size="sm" 
-                            src ="./images/border-radius.svg"
+                            src ="https://drive.google.com/thumbnail?id=16UlYcb9Pl-7safSJYwN_JNvfazfgERTx"
                             />
                         </NextLink>        
                         <Home/>

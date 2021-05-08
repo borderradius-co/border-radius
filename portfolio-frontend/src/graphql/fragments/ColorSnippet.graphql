@@ -1,0 +1,10 @@
+fragment ColorSnippet on Color {
+    id
+    value 
+    createdAt
+    updatedAt
+    user {
+        id
+        username
+    }
+}
