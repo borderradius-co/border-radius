@@ -1,4 +1,4 @@
-import { Flex, Heading, SimpleGrid, Square} from '@chakra-ui/layout';
+import { Flex,  SimpleGrid, Square} from '@chakra-ui/layout';
 import {Text,Button,Spacer,Avatar,Box, Divider, color, IconButton} from "@chakra-ui/react"
 import React, { useState } from 'react'
 import SingleColor  from './SingleColor';
@@ -12,8 +12,10 @@ import { MdContentCopy } from 'react-icons/md';
 
 
 const ColorValueList = () => {
-
     const [variables, setVariables] = useState({limit: 10, cursor: null as null | string});
+      
+
+    
     const {loading, data} = useColorsQuery({
         variables,
         notifyOnNetworkStatusChange: true
@@ -51,7 +53,6 @@ const ColorValueList = () => {
                                      bgColor="gray.700"
                                      />                                                                                                             
                                      <DeleteColorButton id={userColor.id} userId={userColor.user.id} />
-                                   
                                    
                                      
                                     

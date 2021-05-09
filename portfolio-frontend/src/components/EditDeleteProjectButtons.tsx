@@ -37,9 +37,10 @@ export const EditDeleteProjectButtons: React.FC<EditDeleteProjectButtonsProps> =
                 as={IconButton}
                 aria-label="Options"
                 icon={<MdMoreVert />}
-                _hover={{bg:"#ffdcdc", borderRadius:'50'}}
+                color="black"
+                _hover={{bg:"#000000", borderRadius:'50', color:"white"}}
                 _focus={{bg:"none"}}
-                _active={{bg:"#ffdcdc", borderRadius:'50'}}
+                _active={{bg:"#000000", borderRadius:'50', color:"white"}}
                 variant={variant === 'outline' ? 'outline' : 'none'}
                 borderColor='transparent'
               />

@@ -81,14 +81,14 @@ const Projects = () => {
                     {data!.projects.projects.map((project) =>
                     !project ? null : (
                         <Flex 
-                        alignItems="flex-start" 
+                        alignItems="flex-end" 
                         key = {project.id} 
                         padding={5} 
-                        borderWidth="0.5px" 
+                        // borderWidth="0.5px" 
                         borderRadius="5" 
                         direction="column" 
                         justifyContent="space-between"
-                        _hover={{border:"1px", borderColor:"#8D036F" }}
+                        _hover={{bg:"#f7f7f7", borderColor:"#8D036F" }}
                         >
                         
                             <EditDeleteProjectButtons id={project.id} creatorId={project.creator.id} name={project.name} />
