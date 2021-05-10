@@ -26,6 +26,11 @@ import { Color } from "./entities/Color";
 import { ColorResolver } from "./resolvers/color";
 require('dotenv-safe').config({ allowEmptyValues: true,
 });
+const { ApiPromise, WsProvider } = require('@polkadot/api');
+
+
+
+
 const main = async () => {
     //rerun
     const conn = await createConnection({
@@ -50,6 +55,20 @@ const main = async () => {
     //rerun
 
     const app = express();
+
+    const provider = new WsProvider('wss://rpc.polkadot.io');
+
+    // Create the API and wait until ready
+    const api = await ApiPromise.create({ provider });
+
+    // Retrieve the chain & node information information via rpc calls
+    const [chain, nodeName, nodeVersion] = await Promise.all([
+        api.rpc.system.chain(),
+        api.rpc.system.name(),
+        api.rpc.system.version()
+    ]);
+
+    console.log(`You are connected to chain ${chain} using ${nodeName} v${nodeVersion}`);
   
 
     const RedisStore = connectRedis(session);
